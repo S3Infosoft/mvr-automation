@@ -1,3 +1,4 @@
+import sys
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
@@ -7,11 +8,19 @@ def month_converter(month):
     months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
     return "%02d"%(months.index(month.lower()[:3])+1)
 
-month,year=input("Enter Month and Year (eg. May 2019):\t").split(" ")
-cin,cout=input("Enter check-in and check-out dates (eg. 20 22):\t").split(" ")
+#month,year=input("Enter Month and Year (eg. May 2019):\t").split(" ")
+#cin,cout=input("Enter check-in and check-out dates (eg. 20 22):\t").split(" ")
+month,year='June 2019'.split(" ")
+cin,cout='20 22'.split(" ")
+
 datein=year+"-"+month_converter(month)+"-"+cin
 dateout=year+"-"+month_converter(month)+"-"+cout
-driver=webdriver.Chrome(r"C:\Users\91845\PycharmProjects\RPA_MVR\Driver\chromedriver.exe")
+
+if sys.platform == 'darwin':
+    driver = webdriver.Chrome()
+else:
+    driver=webdriver.Chrome(r"C:\Users\91845\PycharmProjects\RPA_MVR\Driver\chromedriver.exe")
+
 driver.set_page_load_timeout(10)
 driver.maximize_window()
 driver.get("https://www.booking.com/")
