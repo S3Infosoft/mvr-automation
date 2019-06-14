@@ -54,7 +54,7 @@ waiting.until(ec.visibility_of_element_located((By.ID, agent[x].search_id)))\
     .send_keys(Keys.ARROW_DOWN+Keys.ENTER+Keys.ENTER)
 listed = agent[x].listing(driver)
 agent[x].hotel_find(driver)
-driver.switch_to_window(driver.window_handles[1])
+driver.switch_to.window(driver.window_handles[1])
 time.sleep(3)
 data = agent[x].data_scraping(driver)
 time.sleep(1)
