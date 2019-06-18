@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 import time
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.chrome.options import Options
 from localsettings import Booking
 from localsettings import Goibibo
 from ddl_sql import Database
@@ -24,9 +25,13 @@ cin, cout = input("Enter check-in and check-out dates (eg. 20 22):\t")\
     .split(" ")
 datein = year+"-"+month_converter(month)+"-"+str("%02d" % int(cin))
 dateout = year+"-"+month_converter(month)+"-"+str("%02d" % int(cout))
-driver = webdriver.Chrome(r"C:\Users\91845\PycharmProjects\RPA_MVR\Driver"
-                          r"\chromedriver.exe")
-driver.set_page_load_timeout(45)
+options = Options()
+options.add_argument("--headless")
+options.add_argument('--window-size=1420,1080')
+options.add_argument('--disable-gpu')
+driver = webdriver.Chrome(chrome_options=options,
+                          executable_path=r'C:\Users\91845\PycharmProjects\RPA_MVR\Driver\chromedriver.exe')
+driver.set_page_load_timeout(10)
 driver.maximize_window()
 driver.get(agent[x].target)
 driver.find_element_by_css_selector(agent[x].calender).click()
@@ -49,7 +54,7 @@ driver.find_element_by_xpath(agent[x].day_in(weekin, dayin[x])).click()
 driver.find_element_by_xpath(agent[x].day_out(weekout, dayout[x])).click()
 driver.find_element_by_id(agent[x].search_id).send_keys(agent[x].search_key)
 time.sleep(1)
-waiting = WebDriverWait(driver, 30)
+waiting = WebDriverWait(driver, 10)
 waiting.until(ec.visibility_of_element_located((By.ID, agent[x].search_id)))\
     .send_keys(Keys.ARROW_DOWN+Keys.ENTER+Keys.ENTER)
 listed = agent[x].listing(driver)
