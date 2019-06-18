@@ -5,8 +5,8 @@ import time
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.chrome.options import Options
-from localsettings import Booking
-from localsettings import Goibibo
+from local import Booking
+from local import Goibibo
 from ddl_sql import Database
 import datetime
 
@@ -15,7 +15,7 @@ def main():
     x = int(input("Select agent :\n 0 for booking.com \t 1 for goibibo.com\n"))
     month, year = input("Enter Month and Year (eg. May 2019):\t").split(" ")
     cin, cout = input("Enter check-in and check-out dates (eg. 20 22):\t").split(" ")
-    run(x, month, year, cin, cout, time)
+    run(x, month, year, cin, cout)
 
 
 def month_converter(mnth):
@@ -24,7 +24,7 @@ def month_converter(mnth):
     return "%02d" % (months.index(mnth.lower()[:3])+1)
 
 
-def run(x, month, year, cin, cout, time):
+def run(x, month, year, cin, cout):
     agent = [Booking(), Goibibo()]
     agent_name = ["booking.com", "goibibo.com"]
     datein = year+"-"+month_converter(month)+"-"+str("%02d" % int(cin))
@@ -68,13 +68,13 @@ def run(x, month, year, cin, cout, time):
     data = agent[x].data_scraping(driver)
     time.sleep(1)
     current_time = datetime.datetime.now()
-    time = current_time.strftime("%Y-%m-%d %H:%M:%S")
+    time1 = current_time.strftime("%Y-%m-%d %H:%M:%S")
     sql = Database()
     # sql.create_table()
-    sql.insert_table(time, agent_name[x], datein, dateout, listed,
+    sql.insert_table(time1, agent_name[x], datein, dateout, listed,
                      str(data[0]), str(data[1]), str(data[2]), str(data[3]))
-    sql.print_db()
-
+    # sql.print_db()
+    return True
 
 if __name__ == "__main__":
     main()
