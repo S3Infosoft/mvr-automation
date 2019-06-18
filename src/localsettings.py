@@ -2,36 +2,40 @@ from selenium.common.exceptions import NoSuchElementException
 import time
 
 
-class Booking:
+class Booking(object):
     target = "https://www.booking.com/"
     search_id = "ss"
     search_key = "Ratnagiri"
     calender = "span.sb-date-field__icon.sb-date-field__icon-btn.bk-svg-wrapper.calendar-restructure-sb"
     week_finder = "//*[@id='frm']/div[1]/div[2]/div[2]/div/div/div[3]/div[1]/table/tbody/tr["
-    
-    def day_in(self, weekin, datein):
+
+    @staticmethod
+    def day_in(weekin, datein):
         return "//*[@id='frm']/div[1]/div[2]/div[2]/div/div/div[3]/div[1]/table/tbody/tr["\
                + weekin + "]/td[@data-date='" + datein + "']"
-    
-    def day_out(self, weekout, dateout):
+
+    @staticmethod
+    def day_out(weekout, dateout):
         return "//*[@id='frm']/div[1]/div[2]/div[2]/div/div/div[3]/div[1]/table/tbody/tr["\
                + weekout + "]/td[@data-date='" + dateout + "']"
-    
-    def listing(self, driver):
+
+    @staticmethod
+    def listing(driver):
+        listed = str(0)
         for i in range(20):
             if ((driver.find_element_by_xpath("//*[@id='hotellist_inner']/div[@data-hotelid='4216443']")) == (
                  driver.find_element_by_xpath("//*[@id='hotellist_inner']/div[" + str(i + 1) + "]"))):
                 listed = str("%01d" % ((i + 1) / 2))
                 break
-            else:
-                listed = str(0)
         return listed
 
-    def hotel_find(self, driver):
-        driver.find_element_by_xpath("//*[@id='hotellist_inner']/div[@data-hotelid='4216443']/div[2]/div[1]"
-                                     "/div[1]/h3/a/span[1]").click()
+    @staticmethod
+    def hotel_find(driver):
+        path = "//*[@id='hotellist_inner']/div[@data-hotelid='4216443']"
+        driver.find_element_by_xpath(path).click()
 
-    def data_scraping(self, driver):
+    @staticmethod
+    def data_scraping(driver):
         std_ep = "--"
         std_cp = "--"
         sup_cp = "--"
@@ -68,22 +72,25 @@ class Booking:
         return std_ep, std_cp, sup_ep, sup_cp
 
 
-class Goibibo:
+class Goibibo(object):
     target = "https://www.goibibo.com/hotels/"
     search_id = "gosuggest_inputL"
     search_key = "Ganpatipule"
     calender = "input.form-control.inputTxtLarge.widgetCalenderTxt"
     week_finder = "//*[@id='Home']/div[3]/div[1]/div/div[1]/div[3]/div/div[1]/div[1]/div[2]/div[2]/div[3]/div["
-    
-    def day_in(self, weekin, cin):
+
+    @staticmethod
+    def day_in(weekin, cin):
         return "//*[@id='Home']/div[3]/div[1]/div/div[1]/div[3]/div/div[1]/div[1]/div[2]/div[2]/div[3]/div["\
                + weekin + "]/div[text()='" + cin + "']"
-    
-    def day_out(self, weekout, cout):
+
+    @staticmethod
+    def day_out(weekout, cout):
         return "//*[@id='Home']/div[3]/div[1]/div/div[1]/div[3]/div/div[1]/div[2]/div[2]/div[2]/div[3]/div["\
                + weekout + "]/div[text()='" + cout + "']"
-    
-    def listing(self, driver):
+
+    @staticmethod
+    def listing(driver):
         i = 0
         listed = 0
         for i in range(3):
@@ -111,12 +118,14 @@ class Goibibo:
                     i = i + 250
                     continue
         return listed
-    
-    def hotel_find(self, driver):
+
+    @staticmethod
+    def hotel_find(driver):
         element = driver.find_element_by_link_text("Mango Valley Resort Ganpatipule")
         driver.execute_script("arguments[0].click();", element)
 
-    def data_scraping(self, driver):
+    @staticmethod
+    def data_scraping(driver):
         try:
             std_ep = driver.find_element_by_xpath("//*[@id='roomrtc_45000574650']/div/section/section[2]/aside[1]/"
                                                   "div[1]/div[3]/div[1]/p[2]/span").text
