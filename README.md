@@ -4,7 +4,7 @@ Automation files - MVR
 #### Docker Steps
 - Go to the project directory
   ```
-  cd mvr-automation
+  cd mvr-automation/src
   ```
 - Build the Docker image
   ```
