@@ -34,7 +34,7 @@ def run(x, month, year, cin, cout):
     options.add_argument('--window-size=1420,1080')
     options.add_argument('--disable-gpu')
     driver = webdriver.Chrome(chrome_options=options,
-                              executable_path=r'C:\Users\91845\PycharmProjects\RPA_MVR\Driver\chromedriver.exe')
+                              executable_path=r'chromedriver.exe')
     driver.set_page_load_timeout(15)
     driver.maximize_window()
     driver.get(agent[x].target)
