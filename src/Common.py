@@ -12,10 +12,10 @@ import datetime
 
 
 def main():
-    x = int(input("Select agent :\n 0 for booking.com \t 1 for goibibo.com\n"))
+    name = input("Select agent :\n booking.com \t goibibo.com\n")
     month, year = input("Enter Month and Year (eg. May 2019):\t").split(" ")
     cin, cout = input("Enter check-in and check-out dates (eg. 20 22):\t").split(" ")
-    run(x, month, year, cin, cout)
+    print(run(name, month, year, cin, cout))
 
 
 def month_converter(mnth):
@@ -24,9 +24,14 @@ def month_converter(mnth):
     return "%02d" % (months.index(mnth.lower()[:3])+1)
 
 
-def run(x, month, year, cin, cout):
-    agent = [Booking(), Goibibo()]
+def run(name, month, year, cin, cout):
     agent_name = ["booking.com", "goibibo.com"]
+    x = None
+    if name == agent_name[0]:
+        x = 0
+    elif name == agent_name[1]:
+        x = 1
+    agent = [Booking(), Goibibo()]
     datein = year+"-"+month_converter(month)+"-"+str("%02d" % int(cin))
     dateout = year+"-"+month_converter(month)+"-"+str("%02d" % int(cout))
     options = Options()
@@ -44,8 +49,7 @@ def run(x, month, year, cin, cout):
     weekin = str(0)
     weekout = str(0)
     for i in range(6):
-        temp = (driver.find_element_by_xpath(agent[x].week_finder+str(i+1)+"]")
-                .text).split(" ")
+        temp = driver.find_element_by_xpath(agent[x].week_finder+str(i+1)+"]").text.split(" ")
         if any(cin in s for s in temp) and flag1:
             weekin = str(i+1)
             flag1 = False
@@ -74,7 +78,8 @@ def run(x, month, year, cin, cout):
     sql.insert_table(time1, agent_name[x], datein, dateout, listed,
                      str(data[0]), str(data[1]), str(data[2]), str(data[3]))
     # sql.print_db()
-    return True
+    return time1, agent_name[x], datein, dateout, listed, str(data[0]), str(data[1]), str(data[2]), str(data[3])
+
 
 if __name__ == "__main__":
     main()
