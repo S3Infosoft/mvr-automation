@@ -18,7 +18,7 @@ Automation files - MVR
   ```
   docker logs [container id]
   ```
- # JSON Input Format
+ # JSON Input Format for calling run method:
  ```
  {"ota_name":"booking.com", "month": "June","year":"2019", "cin":"22","cout":"24"}
  ```
