@@ -14,4 +14,11 @@ Automation files - MVR
   ```
   docker run --rm -p 5000:5000 -d --name s3infosoft mvr-automation:latest
   ```
-
+- Check logs
+  ```
+  docker logs [container id]
+  ```
+ # JSON Input Format
+ ```
+ {"ota_name":"booking.com", "month": "June","year":"2019", "cin":"22","cout":"24"}
+ ```
