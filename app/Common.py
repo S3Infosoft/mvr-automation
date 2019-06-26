@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import time
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
@@ -23,7 +24,6 @@ def month_converter(mnth):
               'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
     return "%02d" % (months.index(mnth.lower()[:3])+1)
 
-
 def run(name, month, year, cin, cout):
     agent_name = ["booking.com", "goibibo.com"]
     x = None
@@ -38,8 +38,13 @@ def run(name, month, year, cin, cout):
     options.add_argument("--headless")
     options.add_argument('--window-size=1420,1080')
     options.add_argument('--disable-gpu')
-    driver = webdriver.Chrome(chrome_options=options,
-                              executable_path=r'chromedriver.exe')
+
+    # driver = webdriver.Chrome(chrome_options=options,
+    #                           executable_path=r'chromedriver.exe')
+    driver = webdriver.Remote(
+              command_executor='http://selenium-hub:4444/wd/hub',
+              desired_capabilities=DesiredCapabilities.CHROME)
+
     driver.set_page_load_timeout(15)
     driver.maximize_window()
     driver.get(agent[x].target)
@@ -68,6 +73,7 @@ def run(name, month, year, cin, cout):
     listed = agent[x].listing(driver)
     agent[x].hotel_find(driver)
     driver.switch_to.window(driver.window_handles[1])
+    driver.quit()
     time.sleep(3)
     data = agent[x].data_scraping(driver)
     time.sleep(1)

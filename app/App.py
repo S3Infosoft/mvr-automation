@@ -16,6 +16,7 @@ def api_message():
     rdata = request.json
     run(rdata['ota_name'],rdata['month'],rdata['year'], rdata['cin'], rdata['cout'])
     return "JSON Message: " + json.dumps(request.json)
+
     # if request.headers['Content-Type'] == 'text/plain':
     #     return "Text Message: " + request.data
     #

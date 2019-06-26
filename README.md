@@ -6,19 +6,16 @@ MVR Channel Automation via Selenium
   ```
   cd mvr-automation
   ```
-- Build the Docker image
+- Build image and selenium hub
   ```
-  docker build -t mvr-automation:latest .
+  docker-compose build
   ```
 - Execute
   ```
-  docker run --rm -p 5000:5000 -d --name s3infosoft mvr-automation:latest
+  docker-compose up
   ```
-- Check logs
-  ```
-  docker logs [container id]
-  ```
- # JSON Input Format for calling run method:
+
+##### JSON Input Format for calling run method:
  ```
  {"ota_name":"booking.com", "month": "June","year":"2019", "cin":"22","cout":"24"}
  ```
