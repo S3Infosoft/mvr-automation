@@ -1,5 +1,5 @@
 # mvr-automation
-Automation files - MVR
+MVR Channel Automation files
 
 #### Docker Steps
 - Go to the project directory
