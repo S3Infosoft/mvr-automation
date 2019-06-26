@@ -1,10 +1,10 @@
 # mvr-automation
-MVR Channel Automation files
+MVR Channel Automation via Selenium
 
 #### Docker Steps
 - Go to the project directory
   ```
-  cd mvr-automation/src
+  cd mvr-automation
   ```
 - Build the Docker image
   ```
