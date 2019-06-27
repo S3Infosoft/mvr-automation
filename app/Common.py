@@ -40,10 +40,10 @@ def run(name, month, year, cin, cout):
     options.add_argument('--disable-gpu')
 
     # driver = webdriver.Chrome(chrome_options=options,
-    #                           executable_path=r'chromedriver.exe')
+    #                            executable_path=r'chromedriver.exe')
     driver = webdriver.Remote(
-              command_executor='http://selenium-hub:4444/wd/hub',
-              desired_capabilities=DesiredCapabilities.CHROME)
+               command_executor='http://selenium-hub:4444/wd/hub',
+               desired_capabilities=DesiredCapabilities.CHROME)
 
     driver.set_page_load_timeout(15)
     driver.maximize_window()
@@ -73,9 +73,9 @@ def run(name, month, year, cin, cout):
     listed = agent[x].listing(driver)
     agent[x].hotel_find(driver)
     driver.switch_to.window(driver.window_handles[1])
-    driver.quit()
     time.sleep(3)
     data = agent[x].data_scraping(driver)
+    driver.quit()
     time.sleep(1)
     current_time = datetime.datetime.now()
     time1 = current_time.strftime("%Y-%m-%d %H:%M:%S")
