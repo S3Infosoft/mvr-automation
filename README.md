@@ -15,7 +15,19 @@ MVR Channel Automation via Selenium
   docker-compose up
   ```
 
-##### JSON Input Format for calling run method:
- ```
- {"ota_name":"booking.com", "month": "June","year":"2019", "cin":"22","cout":"24"}
- ```
+##### API Invocation
+
+- /automation/v1/booking
+  ```
+  {"property_id":"123456", "checkin_date": "26/10/2019", "checkout_date": "27/10/2019" }
+  ```
+
+- /automation/v1/goibibo
+  ```
+  {"place":"Ganpatipule", "checkin_date": "27/10/2019", "checkout_date": "28/10/2019" }
+  ```
+
+- /automation/v1/mmt
+  ```
+  {"place":"Ganpatipule", "checkin_date": "28/10/2019", "checkout_date": "29/10/2019" }
+  ```
