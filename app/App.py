@@ -7,12 +7,13 @@ from mmt import MMTImpl
 
 app = Flask(__name__)
 
+
 @app.route("/")
 def hello():
     return "Hello World!"
 
 
-@app.route('/automation/v1/booking', methods = ['POST'])
+@app.route('/automation/v1/booking', methods=['POST'])
 def automation_booking():
     rdata = request.json
     target = BookingDotComImpl(rdata['search_text'], rdata['checkin_date'], rdata['checkout_date'])
