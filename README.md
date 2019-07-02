@@ -19,15 +19,15 @@ MVR Channel Automation via Selenium
 
 - /automation/v1/booking
   ```
-  {"property_id":"123456", "checkin_date": "26/10/2019", "checkout_date": "27/10/2019" }
+  {"search_text":"Ratnagiri", "checkin_date": "26/10/2019", "checkout_date": "27/10/2019" }
   ```
 
 - /automation/v1/goibibo
   ```
-  {"place":"Ganpatipule", "checkin_date": "27/10/2019", "checkout_date": "28/10/2019" }
+  {"search_text":"Ganpatipule", "checkin_date": "27/10/2019", "checkout_date": "28/10/2019" }
   ```
 
 - /automation/v1/mmt
   ```
-  {"place":"Ganpatipule", "checkin_date": "28/10/2019", "checkout_date": "29/10/2019" }
+  {"search_text":"Ganpatipule", "checkin_date": "28/10/2019", "checkout_date": "29/10/2019" }
   ```
