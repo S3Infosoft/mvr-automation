@@ -151,3 +151,60 @@ class Goibibo(object):
             sup_cp = "--"
             pass
         return std_ep, std_cp, sup_ep, sup_cp
+
+
+class Mmt(object):
+    @staticmethod
+    def listing(driver, search_text, din, dout):
+        cin, month, year = din.split("/")
+        cout, month, year = dout.split("/")
+        driver.get("https://www.makemytrip.com/hotels/hotel-listing/?checkin=" + month + cin + year +
+                   "&checkout=" + month + cout + year + "&city=XGP&country=IN&searchText=" + search_text +
+                   "%2C%20India&roomStayQualifier=2e0e")
+        a = driver.find_element_by_xpath("//*[@id='htl_id_seo_201811281301162654']")
+        i = 0
+        time.sleep(2)
+        while 1:
+            try:
+                b = driver.find_element_by_xpath(
+                    "//*[@id='Listing_hotel_" + str(i) + "']/a/div/div[1]/div[2]/div[2]/div[1]/p/span")
+            except NoSuchElementException:
+                b = driver.find_element_by_xpath(
+                    "//*[@id='Listing_hotel_" + str(i) + "']/a/div/div[1]/div[2]/div[1]/div[1]/p/span")
+            if a == b:
+                return str(i + 1)
+            else:
+                i = i + 1
+
+    @staticmethod
+    def hotel_find(driver, din, dout):
+        cin, month, year = din.split("/")
+        cout, month, year = dout.split("/")
+        driver.get("https://www.makemytrip.com/hotels/hotel-details/?checkin=" + month + cin + year +
+                   "&hotelId=201811281301162654&pType=details&screenType=details&checkout=" + month + cin + year +
+                   "&roomStayQualifier=2e0e&city=XGP&country=IN&type=HTL&searchText=Mango%20Valley%20"
+                   "Resort%20Ganpatipule&visitorId=0d107fed-19ac-481f-8e43-163a944ac760")
+
+    @staticmethod
+    def data_scraping(driver):
+        try:
+            std_ep = driver.find_element_by_xpath("//*[@id='990001097019']/div[2]/div[1]/div/span[1]").text
+        except NoSuchElementException:
+            std_ep = "--"
+            pass
+        try:
+            std_cp = driver.find_element_by_xpath("//*[@id='990001200931']/div[2]/div[1]/div/span[1]").text
+        except NoSuchElementException:
+            std_cp = "--"
+            pass
+        try:
+            sup_ep = driver.find_element_by_xpath("//*[@id='990001097020']/div[2]/div[1]/div/span[1]").text
+        except NoSuchElementException:
+            sup_ep = "--"
+            pass
+        try:
+            sup_cp = driver.find_element_by_xpath("//*[@id='990001200939']/div[2]/div[1]/div/span[1]").text
+        except NoSuchElementException:
+            sup_cp = "--"
+            pass
+        return std_ep, std_cp, sup_ep, sup_cp
