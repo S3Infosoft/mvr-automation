@@ -1,8 +1,9 @@
 from flask import Flask
 from flask import json
 from flask import request
-from Common import *
-from selenium.common.exceptions import TimeoutException
+from bookingdotcom import BookingDotComImpl
+from goibibo import GoibiboImpl
+from mmt import MMTImpl
 
 app = Flask(__name__)
 
@@ -12,46 +13,45 @@ def hello():
 
 
 @app.route('/automation/v1/booking', methods = ['POST'])
-def run_booking():
+def automation_booking():
     rdata = request.json
-    aobj = MasterBooking()
-    try:
-        returndata = aobj.run(rdata['search_text'], rdata['cin'], rdata['cout'])
-        return json.dumps(returndata)
-    except TimeoutException:
-        returndata = {"ERROR":"TIMEOUT"}
-        return json.dumps(returndata)
+    target = BookingDotComImpl(rdata['search_text'], rdata['checkin_date'], rdata['checkout_date'])
+    result = target.run()
+    return "Invoked Booking.com API v1: " + json.dumps(result)
 
 
-@app.route('/automation/v1/goibibo', methods=['POST'])
-def run_goibibo():
+@app.route('/automation/v1/mmt', methods = ['POST'])
+def automation_mmt():
     rdata = request.json
-    aobj = MasterGoibibo()
-    try:
-        returndata = aobj.run(rdata['search_text'], rdata['cin'], rdata['cout'])
-        return json.dumps(returndata)
-    except TimeoutException:
-        returndata = {"ERROR":"TIMEOUT"}
-        return json.dumps(returndata)
+    target = MMTImpl(rdata['search_text'], rdata['checkin_date'], rdata['checkout_date'])
+    result = target.run()
+    return "Invoked MMT API v1: " + json.dumps(result)
 
-@app.route('/automation/v1/mmt', methods=['POST'])
-def run_mmt():
+
+@app.route('/automation/v1/goibibo', methods = ['POST'])
+def automation_goibibo():
     rdata = request.json
-    aobj = MasterMMT()
-    try:
-        returndata = aobj.run(rdata['search_text'], rdata['cin'], rdata['cout'])
-        return json.dumps(returndata)
-    except TimeoutException:
-        returndata = {"ERROR":"TIMEOUT"}
-        return json.dumps(returndata)
-    # if request.headers['Content-Type'] == 'text/plain':
-    #     return "Text Message: " + request.data
-    #
-    # elif request.headers['Content-Type'] == 'application/json':
-    #     return "JSON Message: " + json.dumps(request.json)
-    #
-    # else:
-    #     return "415 Unsupported Media Type ;)"
+    target = GoibiboImpl(rdata['search_text'], rdata['checkin_date'], rdata['checkout_date'])
+    result = target.run()
+    return "Invoked Goibibo API v1: " + json.dumps(result)
+
+
+@app.route('/automation/v1/yatra', methods = ['POST'])
+def automation_yatra():
+    rdata = request.json
+    return "Invoked Yatra API v1: " + json.dumps(rdata)
+
+
+@app.route('/automation/v1/travelguru', methods = ['POST'])
+def automation_tg():
+    rdata = request.json
+    return "Invoked Travelguru API v1: " + json.dumps(rdata)
+
+
+@app.route('/automation/v1/airbnb', methods = ['POST'])
+def automation_airbnb():
+    rdata = request.json
+    return "Invoked Airbnb API v1: " + json.dumps(rdata)
 
 
 if __name__ == "__main__":
