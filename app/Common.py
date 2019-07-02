@@ -12,10 +12,6 @@ import datetime
 
 def main():
     pass
-    # name = input("Select agent :\n booking.com \t goibibo.com\n")
-    # month, year = input("Enter Month and Year (eg. May 2019):\t").split(" ")
-    # cin, cout = input("Enter check-in and check-out dates (eg. 20 22):\t").split(" ")
-    # print(run(name, month, year, cin, cout))
 
 
 def calender_ctrl(agent, cin, cout):
@@ -34,13 +30,6 @@ def calender_ctrl(agent, cin, cout):
         if any(cout in s for s in temp) and flag2:
             weekout = str(i+1)
             return weekin, weekout
-
-
-class MasterBooking(object):
-    @staticmethod
-    def run(search_text, din, dout):
-        agent = Booking()
-        return main_run(agent, search_text, din, dout)
 
 
 class MasterGoibibo(object):
@@ -102,6 +91,7 @@ def sql_entry(listed, agent_name, din, dout, data):
     returndata['Std_CP'] = str(data[1])
     returndata['Sup_EP'] = str(data[2])
     returndata['Sup_CP'] = str(data[3])
+    returndata['Status'] = 'OK'
     return returndata
 
 

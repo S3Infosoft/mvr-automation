@@ -1,5 +1,5 @@
-
 from ota import OTA
+
 
 class GoibiboImpl(OTA):
     def __init__(self, place, checkin, checkout):

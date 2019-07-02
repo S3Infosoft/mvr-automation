@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
+
 def run():
     chrome = webdriver.Remote(
               command_executor='http://localhost:4444/wd/hub',
@@ -14,6 +15,7 @@ def run():
     print(firefox.title)
     chrome.quit()
     firefox.quit()
+
 
 if __name__ == "__main__":
     run()
