@@ -16,7 +16,7 @@ def hello():
 @app.route('/automation/v1/booking', methods=['POST'])
 def automation_booking():
     rdata = request.json
-    target = BookingDotComImpl(rdata['search_text'], rdata['checkin_date'], rdata['checkout_date'])
+    target = BookingDotComImpl(rdata['search_text'], rdata['hotel_id'], rdata['checkin_date'], rdata['checkout_date'])
     result = target.run()
     return "Invoked Booking.com API v1: " + json.dumps(result)
 
@@ -32,7 +32,7 @@ def automation_mmt():
 @app.route('/automation/v1/goibibo', methods = ['POST'])
 def automation_goibibo():
     rdata = request.json
-    target = GoibiboImpl(rdata['search_text'], rdata['checkin_date'], rdata['checkout_date'])
+    target = GoibiboImpl(rdata['search_text'],rdata['hotel_name'], rdata['checkin_date'], rdata['checkout_date'])
     result = target.run()
     return "Invoked Goibibo API v1: " + json.dumps(result)
 

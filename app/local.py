@@ -1,4 +1,7 @@
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.common.by import By
 import time
 
 
@@ -20,18 +23,23 @@ class Booking(object):
                + weekout + "]/td[@data-date='" + dateout + "']"
 
     @staticmethod
-    def listing(driver):
-        listed = str(0)
+    def proceed(driver):
+        # driver.find_element_by_xpath(Booking.search_id).send_keys(Keys.ENTER)
+        pass
+
+    @staticmethod
+    def listing(driver, hotel_id):
+        listed = "-"
         for i in range(20):
-            if ((driver.find_element_by_xpath("//*[@id='hotellist_inner']/div[@data-hotelid='4216443']")) == (
+            if ((driver.find_element_by_xpath("//*[@id='hotellist_inner']/div[@data-hotelid='"+hotel_id+"']")) == (
                  driver.find_element_by_xpath("//*[@id='hotellist_inner']/div[" + str(i + 1) + "]"))):
                 listed = str("%01d" % ((i + 1) / 2))
                 break
         return listed
 
     @staticmethod
-    def hotel_find(driver):
-        path = "//*[@id='hotellist_inner']/div[@data-hotelid='4216443']"
+    def hotel_find(driver, hotel_id):
+        path = "//*[@id='hotellist_inner']/div[@data-hotelid='"+hotel_id+"']"
         driver.find_element_by_xpath(path).click()
 
     @staticmethod
@@ -80,22 +88,35 @@ class Goibibo(object):
     week_finder = "//*[@id='Home']/div[3]/div[1]/div/div[1]/div[3]/div/div[1]/div[1]/div[2]/div[2]/div[3]/div["
 
     @staticmethod
-    def day_in(weekin, cin):
+    def day_in(weekin, datein):
+        _, _, cin = datein.split("-")
+        cin = str("%01d" % int(cin))
         return "//*[@id='Home']/div[3]/div[1]/div/div[1]/div[3]/div/div[1]/div[1]/div[2]/div[2]/div[3]/div["\
                + weekin + "]/div[text()='" + cin + "']"
 
     @staticmethod
-    def day_out(weekout, cout):
+    def day_out(weekout, dateout):
+        _, _, cout = dateout.split("-")
+        cout = str("%01d" % int(cout))
         return "//*[@id='Home']/div[3]/div[1]/div/div[1]/div[3]/div/div[1]/div[2]/div[2]/div[2]/div[3]/div["\
                + weekout + "]/div[text()='" + cout + "']"
 
     @staticmethod
-    def listing(driver):
+    def proceed(driver):
+        waiting = WebDriverWait(driver, 10)
+        element = waiting.until(ec.visibility_of_element_located(
+            (By.XPATH, "//li[@id = 'react-autosuggest-1-suggestion--0']/div[1]/div[1]/div[1]/span")))
+        element.click()
+        driver.find_element_by_xpath("//*[@id='Home']/div[3]/div[1]/div/div[1]/div[3]/div/div[3]/div/button").click()
+
+    @staticmethod
+    def listing(driver, hotel_name):
         i = 0
         listed = 0
         for i in range(3):
             try:
-                if ("Mango Valley Resort Ganpatipule" == driver.find_element_by_xpath(
+
+                if (hotel_name == driver.find_element_by_xpath(
                         "//*[@id='srpContainer']/div[2]/div[2]/div/div[2]/div/div[5]/div[1]/div/div/section["
                         + str(i + 1) + "]/div[2]/div/div[1]/div[1]/div/a/span").text):
                     listed = i+1
@@ -107,8 +128,8 @@ class Goibibo(object):
         if listed == 0:
             while 1:
                 divs = driver.find_element_by_tag_name('div').text
-                if 'Mango Valley Resort Ganpatipule' in divs:
-                    listed = str("%01d" % (i / 250))
+                if hotel_name in divs:
+                    listed = "%01d" % (i / 250)
                     driver.execute_script("window.scrollTo(" + str(i) + "," + str(i + 750) + ");")
                     time.sleep(1)
                     break
@@ -117,11 +138,11 @@ class Goibibo(object):
                     time.sleep(0.5)
                     i = i + 250
                     continue
-        return listed
+        return str(listed)
 
     @staticmethod
-    def hotel_find(driver):
-        element = driver.find_element_by_link_text("Mango Valley Resort Ganpatipule")
+    def hotel_find(driver, hotel_name):
+        element = driver.find_element_by_link_text(hotel_name)
         driver.execute_script("arguments[0].click();", element)
 
     @staticmethod

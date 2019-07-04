@@ -1,10 +1,7 @@
 from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.keys import Keys
 from local import *
 from ddl_sql import Database
 import datetime
@@ -32,13 +29,6 @@ def calender_ctrl(agent, cin, cout):
             return weekin, weekout
 
 
-class MasterGoibibo(object):
-    @staticmethod
-    def run(search_text, din, dout):
-        agent = Goibibo()
-        return main_run(agent, search_text, din, dout)
-
-
 class MasterMMT(object):
     @staticmethod
     def run(search_text, din, dout):
@@ -61,7 +51,8 @@ def start_driver():
     options.add_argument("--headless")
     options.add_argument('--window-size=1420,1080')
     options.add_argument('--disable-gpu')
-
+    options.add_argument('--no-sandbox')
+    # options.add_argument('--disable-dev-shm-usage')
     # driver = webdriver.Chrome(chrome_options=options,
     #                            executable_path=r'chromedriver.exe')
     driver = webdriver.Remote(
@@ -95,7 +86,7 @@ def sql_entry(listed, agent_name, din, dout, data):
     return returndata
 
 
-def main_run(agent, search_text, din, dout):
+def main_run(agent, hotel_prop, search_text, din, dout):
     driver = start_driver()
     agent_name = agent.__class__.__name__
     driver.get(agent.target)
@@ -106,16 +97,18 @@ def main_run(agent, search_text, din, dout):
     weekin, weekout = calender_ctrl(agent, cin, cout)
     driver.find_element_by_xpath(agent.day_in(weekin, datein)).click()
     driver.find_element_by_xpath(agent.day_out(weekout, dateout)).click()
-    driver.find_element_by_id(agent.search_id).send_keys(search_text)
+    driver.find_element_by_id(agent.search_id).send_keys(search_text+Keys.ENTER)
     time.sleep(1)
-    waiting = WebDriverWait(driver, 10)
-    waiting.until(ec.visibility_of_element_located((By.ID, agent.search_id)))\
-        .send_keys(Keys.ARROW_DOWN+Keys.ENTER+Keys.ENTER)
-    listed = agent.listing(driver)
-    agent.hotel_find(driver)
+    agent.proceed(driver)
+    # waiting = WebDriverWait(driver, 10)
+    # waiting.until(ec.visibility_of_element_located((By.ID, agent.search_id)))\
+    #     .send_keys(Keys.ARROW_DOWN+Keys.ENTER+Keys.ENTER)
+    listed = agent.listing(driver, hotel_prop)
+    agent.hotel_find(driver, hotel_prop)
     driver.switch_to.window(driver.window_handles[1])
     time.sleep(3)
     data = agent.data_scraping(driver)
+    time.sleep(1)
     driver.quit()
     returndata = sql_entry(listed, agent_name, din, dout, data)
     return returndata

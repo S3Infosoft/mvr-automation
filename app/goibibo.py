@@ -1,16 +1,19 @@
 from ota import OTA
+from Common import main_run
+from local import Goibibo
+from selenium.common.exceptions import TimeoutException
 
 
 class GoibiboImpl(OTA):
-    def __init__(self, place, checkin, checkout):
+    def __init__(self, search_text, hotel_name, checkin, checkout):
         super(GoibiboImpl, self).__init__("goibibo.com", checkin, checkout)
-        self.place = place
-        self.result = {}
-        self.result['checkin'] = checkin
-        self.result['checkout'] = checkout
-        self.result['place'] = place
-        self.result['status'] = 'OK'
+        self.search_text = search_text
+        self.hotel_name = hotel_name
 
     def run(self):
         # TODO: Invoke specific run method with goibibo parameters
-        return self.result
+        agent = Goibibo()
+        try:
+            return main_run(agent, self.search_text, self.hotel_name, self.checkin, self.checkout)
+        except TimeoutException:
+            return {"Status": "TIMEOUT ERROR"}
