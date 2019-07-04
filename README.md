@@ -19,12 +19,12 @@ MVR Channel Automation via Selenium
 
 - /automation/v1/booking
   ```
-  {"search_text":"Ratnagiri", "checkin_date": "26/10/2019", "checkout_date": "27/10/2019" }
+  {"search_text":"Ratnagiri", "hotel_id": "4216443","checkin_date": "26/10/2019", "checkout_date": "27/10/2019" }
   ```
 
 - /automation/v1/goibibo
   ```
-  {"search_text":"Ganpatipule", "checkin_date": "27/10/2019", "checkout_date": "28/10/2019" }
+  {"search_text":"Ganpatipule","hotel_name":"Mango Valley Resort Ganpatipule", "checkin_date": "27/10/2019", "checkout_date": "28/10/2019" }
   ```
 
 - /automation/v1/mmt
