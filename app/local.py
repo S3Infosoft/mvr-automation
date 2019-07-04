@@ -138,11 +138,13 @@ class Goibibo(object):
                     time.sleep(0.5)
                     i = i + 250
                     continue
+        # print(listed)
         return str(listed)
 
     @staticmethod
     def hotel_find(driver, hotel_name):
         element = driver.find_element_by_link_text(hotel_name)
+        # time.sleep(1)
         driver.execute_script("arguments[0].click();", element)
 
     @staticmethod
