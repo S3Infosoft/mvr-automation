@@ -14,6 +14,6 @@ class GoibiboImpl(OTA):
         # TODO: Invoke specific run method with goibibo parameters
         agent = Goibibo()
         try:
-            return main_run(agent, self.search_text, self.hotel_name, self.checkin, self.checkout)
+            return main_run(agent, self.hotel_name, self.search_text,  self.checkin, self.checkout)
         except TimeoutException:
             return {"Status": "TIMEOUT ERROR"}
