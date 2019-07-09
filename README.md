@@ -19,9 +19,7 @@ MVR Channel Automation via Selenium
 
 - /automation/v1/booking
   ```
-  {"search_text":"Ratnagiri", "hotel_id": "4216443","checkin_date": "26/10/2019", "checkout_date": "27/10/2019","room_typeids":["room_type_id_421644301", "room_type_id_421644302", "room_type_id_421644305", "room_type_id_421644303"],"room_priceids":["rate_price_id_421644301_141698786_0_0_0", "rate_price_id_421644301_174652031_0_2_0","rate_price_id_421644302_141698786_0_0_0", "rate_price_id_421644302_174652031_0_2_0","rate_price_id_421644305_174652031_4_2_0", "rate_price_id_421644303_174652031_0_2_0"]
-
- }
+  {"search_text":"Ratnagiri", "hotel_id": "4216443","checkin_date": "26/10/2019", "checkout_date": "27/10/2019","room_typeids":["room_type_id_421644301", "room_type_id_421644302", "room_type_id_421644305", "room_type_id_421644303"],"room_priceids":["rate_price_id_421644301_141698786_0_0_0", "rate_price_id_421644301_174652031_0_2_0","rate_price_id_421644302_141698786_0_0_0", "rate_price_id_421644302_174652031_0_2_0","rate_price_id_421644305_174652031_4_2_0", "rate_price_id_421644303_174652031_0_2_0"]}
   ```
 
 - /automation/v1/goibibo
