@@ -30,7 +30,7 @@ class Booking(object):
     @staticmethod
     def listing(driver, hotel_id):
         listed = "-"
-        for i in range(20):
+        for i in range(40):
             if ((driver.find_element_by_xpath("//*[@id='hotellist_inner']/div[@data-hotelid='"+hotel_id+"']")) == (
                  driver.find_element_by_xpath("//*[@id='hotellist_inner']/div[" + str(i + 1) + "]"))):
                 listed = str("%01d" % ((i + 1) / 2))
@@ -43,41 +43,20 @@ class Booking(object):
         driver.find_element_by_xpath(path).click()
 
     @staticmethod
-    def data_scraping(driver):
-        std_ep = "--"
-        std_cp = "--"
-        sup_cp = "--"
-        sup_ep = "--"
-        try:
-            room_type = driver.find_element_by_xpath("//*[@id='hprt-form']/table/tbody/tr[1]/td[1]/div/div[1]/a[2]")\
-                .get_attribute("data-room-name")
-            if room_type == "Standard Double Room":
-                std_ep = driver.find_element_by_xpath("//form[@id='hprt-form']/table/tbody/tr/td[3]/div/div[2]").text
-                std_cp = driver.find_element_by_xpath("//form[@id='hprt-form']/table/tbody/tr[3]/td[2]/div/div[2]").text
-            elif room_type == "Superior Double Room":
-                sup_ep = driver.find_element_by_xpath("//form[@id='hprt-form']/table/tbody/tr/td[3]/div/div[2]").text
-                sup_cp = driver.find_element_by_xpath("//form[@id='hprt-form']/table/tbody/tr[3]/td[2]/div/div[2]").text
-        except NoSuchElementException:
-            pass
-        try:
-            room_type = driver.find_element_by_xpath("//*[@id='hprt-form']/table/tbody/tr[4]/td[1]/div/div[1]/a[2]")\
-                .get_attribute("data-room-name")
-            if room_type == "Standard Double Room":
-                std_ep = driver.find_element_by_xpath("//form[@id='hprt-form']/table/tbody/tr[4]/td[3]/div/div[2]").text
-                std_cp = driver.find_element_by_xpath("//form[@id='hprt-form']/table/tbody/tr[5]/td[2]/div/div[2]").text
-            elif room_type == "Superior Double Room":
-                sup_ep = driver.find_element_by_xpath("//form[@id='hprt-form']/table/tbody/tr[4]/td[3]/div/div[2]").text
-                sup_cp = driver.find_element_by_xpath("//form[@id='hprt-form']/table/tbody/tr[5]/td[2]/div/div[2]").text
-            else:
-                if std_ep != "--" and std_cp != "--":
-                    sup_ep = "--"
-                    sup_cp = "--"
-                elif sup_ep != "--" and sup_cp != "--":
-                    std_ep = "--"
-                    std_cp = "--"
-        except NoSuchElementException:
-            pass
-        return std_ep, std_cp, sup_ep, sup_cp
+    def data_scraping(driver, room_typeids, room_priceids):
+        room_type = []
+        room_price = []
+        for i in range(len(room_typeids)):
+            room_price.append([])
+            room_type.append(driver.find_element_by_id(room_typeids[i]).get_attribute("data-room-name"))
+            for j in range(len(room_priceids)):
+                if room_typeids[i].split("_")[3] == room_priceids[j].split("_")[3]:
+                    room_price[i].append(driver.find_element_by_id(room_priceids[j]).text)
+        returnlist = []
+        for i in range(len(room_type)):
+            returnlist.append(room_type[i])
+            returnlist.append(room_price[i])
+        return returnlist
 
 
 class Goibibo(object):
@@ -204,7 +183,7 @@ class Mmt(object):
         cin, month, year = din.split("/")
         cout, month, year = dout.split("/")
         driver.get("https://www.makemytrip.com/hotels/hotel-details/?checkin=" + month + cin + year +
-                   "&hotelId=201811281301162654&pType=details&screenType=details&checkout=" + month + cin + year +
+                   "&hotelId=201811281301162654&pType=details&screenType=details&checkout=" + month + cout + year +
                    "&roomStayQualifier=2e0e&city=XGP&country=IN&type=HTL&searchText=Mango%20Valley%20"
                    "Resort%20Ganpatipule&visitorId=0d107fed-19ac-481f-8e43-163a944ac760")
 

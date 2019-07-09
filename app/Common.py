@@ -3,7 +3,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from local import *
-from ddl_sql import Database
+# from ddl_sql import Database
 import datetime
 
 
@@ -67,10 +67,10 @@ def start_driver():
 def sql_entry(listed, agent_name, din, dout, data):
     current_time = datetime.datetime.now()
     time1 = current_time.strftime("%Y-%m-%d %H:%M:%S")
-    sql = Database()
+    # sql = Database()
     # sql.create_table()
-    sql.insert_table(time1, agent_name, din, dout, listed,
-                     str(data[0]), str(data[1]), str(data[2]), str(data[3]))
+    # sql.insert_table(time1, agent_name, din, dout, listed,
+    #                  str(data[0]), str(data[1]), str(data[2]), str(data[3]))
     # sql.print_db()
     returndata = {}
     returndata['run_time'] = time1
@@ -78,15 +78,15 @@ def sql_entry(listed, agent_name, din, dout, data):
     returndata['check_in'] = din
     returndata['check_out'] = dout
     returndata['listed_position'] = listed
-    returndata['Std_EP'] = str(data[0])
-    returndata['Std_CP'] = str(data[1])
-    returndata['Sup_EP'] = str(data[2])
-    returndata['Sup_CP'] = str(data[3])
+    i = 0
+    while i < len(data):
+        returndata[data[i]] = str(data[i+1])
+        i = i+2
     returndata['Status'] = 'OK'
     return returndata
 
 
-def main_run(agent, hotel_prop, search_text, din, dout):
+def main_run(agent, hotel_prop, search_text, din, dout, room_typeids, room_priceids):
     driver = start_driver()
     agent_name = agent.__class__.__name__
     driver.get(agent.target)
@@ -104,7 +104,7 @@ def main_run(agent, hotel_prop, search_text, din, dout):
     agent.hotel_find(driver, hotel_prop)
     driver.switch_to.window(driver.window_handles[1])
     time.sleep(5)
-    data = agent.data_scraping(driver)
+    data = agent.data_scraping(driver, room_typeids, room_priceids)
     time.sleep(1)
     driver.quit()
     returndata = sql_entry(listed, agent_name, din, dout, data)

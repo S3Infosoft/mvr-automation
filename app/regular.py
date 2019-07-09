@@ -10,17 +10,25 @@ import datetime
 
 
 def main():
-    agent = Goibibo()
-    search_text = "Ganpatipule"
+    agent = Booking()
+    search_text = "Ratnagiri"
     hotel_name = "Mango Valley Resort Ganpatipule"
-    checkin = "06/07/2019"
-    checkout = "07/07/2019"
-    try:
-        print(main_run(agent, hotel_name, search_text, checkin, checkout))
-        # return main_run(agent,  hotel_name, search_text, checkin, checkout)
-    except TimeoutException:
-        print("TIMEOUT ERROR")
-    pass
+    hotel_id = "4216443"
+    checkin = "09/07/2019"
+    checkout = "10/07/2019"
+    room_typeids = ["room_type_id_421644301", "room_type_id_421644302",
+                    "room_type_id_421644305", "room_type_id_421644303"]
+    room_priceids = ["rate_price_id_421644301_141698786_0_0_0", "rate_price_id_421644301_174652031_0_2_0",
+                     "rate_price_id_421644302_141698786_0_0_0", "rate_price_id_421644302_174652031_0_2_0",
+                     "rate_price_id_421644305_174652031_4_2_0", "rate_price_id_421644303_174652031_0_2_0"]
+    print(main_run(agent, hotel_id, search_text, checkin, checkout, room_typeids, room_priceids))
+
+    # try:
+    #     print(main_run(agent, hotel_name, search_text, checkin, checkout))
+    #     # return main_run(agent,  hotel_name, search_text, checkin, checkout)
+    # except TimeoutException:
+    #     print("TIMEOUT ERROR")
+    # pass
 
 
 def calender_ctrl(agent, cin, cout):
@@ -52,7 +60,7 @@ class MasterMMT(object):
         driver = start_driver()
         agent.hotel_find(driver, din, dout)
         data = agent.data_scraping(driver)
-        driver.quit()
+        # driver.quit()
         returndata = sql_entry(listed, agent_name, din, dout, data)
         return returndata
 
@@ -63,7 +71,7 @@ def start_driver():
     # options.add_argument("--headless")
     options.add_argument('--window-size=1420,1080')
     options.add_argument('--disable-gpu')
-    # options.add_argument('--no-sandbox')
+    options.add_argument('--no-sandbox')
     # options.add_argument('--disable-dev-shm-usage')
     driver = webdriver.Chrome(chrome_options=options,
                                executable_path=r'chromedriver.exe')
@@ -79,10 +87,10 @@ def start_driver():
 def sql_entry(listed, agent_name, din, dout, data):
     current_time = datetime.datetime.now()
     time1 = current_time.strftime("%Y-%m-%d %H:%M:%S")
-    sql = Database()
+    # sql = Database()
     # sql.create_table()
-    sql.insert_table(time1, agent_name, din, dout, listed,
-                     str(data[0]), str(data[1]), str(data[2]), str(data[3]))
+    # sql.insert_table(time1, agent_name, din, dout, listed,
+    #                  str(data[0]), str(data[1]), str(data[2]), str(data[3]))
     # sql.print_db()
     returndata = {}
     returndata['run_time'] = time1
@@ -90,15 +98,19 @@ def sql_entry(listed, agent_name, din, dout, data):
     returndata['check_in'] = din
     returndata['check_out'] = dout
     returndata['listed_position'] = listed
-    returndata['Std_EP'] = str(data[0])
-    returndata['Std_CP'] = str(data[1])
-    returndata['Sup_EP'] = str(data[2])
-    returndata['Sup_CP'] = str(data[3])
+    # returndata['Std_EP'] = str(data[0])
+    # returndata['Std_CP'] = str(data[1])
+    # returndata['Sup_EP'] = str(data[2])
+    # returndata['Sup_CP'] = str(data[3])
+    i = 0
+    while i < len(data):
+        returndata[data[i]] = str(data[i+1])
+        i = i+2
     returndata['Status'] = 'OK'
     return returndata
 
 
-def main_run(agent, hotel_prop, search_text, din, dout):
+def main_run(agent, hotel_prop, search_text, din, dout, room_typeids, room_priceids):
     driver = start_driver()
     agent_name = agent.__class__.__name__
     driver.get(agent.target)
@@ -119,7 +131,7 @@ def main_run(agent, hotel_prop, search_text, din, dout):
     agent.hotel_find(driver, hotel_prop)
     driver.switch_to.window(driver.window_handles[1])
     time.sleep(3)
-    data = agent.data_scraping(driver)
+    data = agent.data_scraping(driver, room_typeids, room_priceids)
     time.sleep(1)
     driver.quit()
     returndata = sql_entry(listed, agent_name, din, dout, data)
