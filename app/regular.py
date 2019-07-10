@@ -14,14 +14,15 @@ def main():
     search_text = "Ratnagiri"
     hotel_name = "Mango Valley Resort Ganpatipule"
     hotel_id = "4216443"
-    checkin = "09/07/2019"
-    checkout = "10/07/2019"
+    checkin = "11/07/2019"
+    checkout = "12/07/2019"
     room_typeids = ["room_type_id_421644301", "room_type_id_421644302",
                     "room_type_id_421644305", "room_type_id_421644303"]
     room_priceids = ["rate_price_id_421644301_141698786_0_0_0", "rate_price_id_421644301_174652031_0_2_0",
                      "rate_price_id_421644302_141698786_0_0_0", "rate_price_id_421644302_174652031_0_2_0",
                      "rate_price_id_421644305_174652031_4_2_0", "rate_price_id_421644303_174652031_0_2_0"]
-    print(main_run(agent, hotel_id, search_text, checkin, checkout, room_typeids, room_priceids))
+    room_ids = ["roomrtc_45000574650", "roomrtc_45000574663", "roomrtc_45000653101", "roomrtc_45000574667"]
+    print(main_run(agent, hotel_id, search_text, checkin, checkout, room_typeids=room_typeids, room_priceids=room_priceids))
 
     # try:
     #     print(main_run(agent, hotel_name, search_text, checkin, checkout))
@@ -68,7 +69,7 @@ class MasterMMT(object):
 def start_driver():
     global driver
     options = Options()
-    # options.add_argument("--headless")
+    options.add_argument("--headless")
     options.add_argument('--window-size=1420,1080')
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
@@ -110,7 +111,7 @@ def sql_entry(listed, agent_name, din, dout, data):
     return returndata
 
 
-def main_run(agent, hotel_prop, search_text, din, dout, room_typeids, room_priceids):
+def main_run(agent, hotel_prop, search_text, din, dout, **kwargs):
     driver = start_driver()
     agent_name = agent.__class__.__name__
     driver.get(agent.target)
@@ -124,14 +125,11 @@ def main_run(agent, hotel_prop, search_text, din, dout, room_typeids, room_price
     driver.find_element_by_id(agent.search_id).send_keys(search_text+Keys.ENTER)
     time.sleep(1)
     agent.proceed(driver)
-    # waiting = WebDriverWait(driver, 10)
-    # waiting.until(ec.visibility_of_element_located((By.ID, agent.search_id)))\
-    #     .send_keys(Keys.ARROW_DOWN+Keys.ENTER+Keys.ENTER)
     listed = agent.listing(driver, hotel_prop)
     agent.hotel_find(driver, hotel_prop)
     driver.switch_to.window(driver.window_handles[1])
-    time.sleep(3)
-    data = agent.data_scraping(driver, room_typeids, room_priceids)
+    time.sleep(5)
+    data = agent.data_scraping(driver, **kwargs)
     time.sleep(1)
     driver.quit()
     returndata = sql_entry(listed, agent_name, din, dout, data)

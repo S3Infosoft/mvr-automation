@@ -8,7 +8,6 @@ import time
 class Booking(object):
     target = "https://www.booking.com/"
     search_id = "ss"
-    search_key = "Ratnagiri"
     calender = "span.sb-date-field__icon.sb-date-field__icon-btn.bk-svg-wrapper.calendar-restructure-sb"
     week_finder = "//*[@id='frm']/div[1]/div[2]/div[2]/div/div/div[3]/div[1]/table/tbody/tr["
 
@@ -43,7 +42,12 @@ class Booking(object):
         driver.find_element_by_xpath(path).click()
 
     @staticmethod
-    def data_scraping(driver, room_typeids, room_priceids):
+    def data_scraping(driver, **kwargs):
+        for key, value in kwargs.items():
+            if key == "room_typeids":
+                room_typeids = value
+            if key == "room_priceids":
+                room_priceids = value
         room_type = []
         room_price = []
         for i in range(len(room_typeids)):
@@ -62,7 +66,6 @@ class Booking(object):
 class Goibibo(object):
     target = "https://www.goibibo.com/hotels/"
     search_id = "gosuggest_inputL"
-    search_key = "Ganpatipule"
     calender = "input.form-control.inputTxtLarge.widgetCalenderTxt"
     week_finder = "//*[@id='Home']/div[3]/div[1]/div/div[1]/div[3]/div/div[1]/div[1]/div[2]/div[2]/div[3]/div["
 
@@ -116,7 +119,10 @@ class Goibibo(object):
                     driver.execute_script("window.scrollTo(" + str(i) + "," + str(i + 250) + ");")
                     time.sleep(0.5)
                     i = i + 250
-                    continue
+                    if i>7500:
+                        break
+                    else:
+                        continue
         # print(listed)
         return str(listed)
 
@@ -127,32 +133,56 @@ class Goibibo(object):
         driver.execute_script("arguments[0].click();", element)
 
     @staticmethod
-    def data_scraping(driver):
-        try:
-            std_ep = driver.find_element_by_xpath("//*[@id='roomrtc_45000574650']/div/section/section[2]/aside[1]/"
-                                                  "div[1]/div[3]/div[1]/p[2]/span").text
-        except NoSuchElementException:
-            std_ep = "--"
-            pass
-        try:
-            std_cp = driver.find_element_by_xpath("//*[@id='roomrtc_45000574650']/div/section/section[2]/aside[2]/"
-                                                  "div[1]/div[3]/div[1]/p[2]/span").text
-        except NoSuchElementException:
-            std_cp = "--"
-            pass
-        try:
-            sup_ep = driver.find_element_by_xpath("//*[@id='roomrtc_45000574663']/div/section/section[2]/aside[1]"
-                                                  "/div[1]/div[3]/div[1]/p[2]/span").text
-        except NoSuchElementException:
-            sup_ep = "--"
-            pass
-        try:
-            sup_cp = driver.find_element_by_xpath("//*[@id='roomrtc_45000574663']/div/section/section[2]/aside[2]"
-                                                  "/div[1]/div[3]/div[1]/p[2]/span").text
-        except NoSuchElementException:
-            sup_cp = "--"
-            pass
-        return std_ep, std_cp, sup_ep, sup_cp
+    def data_scraping(driver, **kwargs):
+        # try:
+        #     std_ep = driver.find_element_by_xpath("//*[@id='roomrtc_45000574650']/div/section/section[2]/aside[1]/"
+        #                                           "div[1]/div[3]/div[1]/p[2]/span").text
+        # except NoSuchElementException:
+        #     std_ep = "--"
+        #     pass
+        # try:
+        #     std_cp = driver.find_element_by_xpath("//*[@id='roomrtc_45000574650']/div/section/section[2]/aside[2]/"
+        #                                           "div[1]/div[3]/div[1]/p[2]/span").text
+        # except NoSuchElementException:
+        #     std_cp = "--"
+        #     pass
+        # try:
+        #     sup_ep = driver.find_element_by_xpath("//*[@id='roomrtc_45000574663']/div/section/section[2]/aside[1]"
+        #                                           "/div[1]/div[3]/div[1]/p[2]/span").text
+        # except NoSuchElementException:
+        #     sup_ep = "--"
+        #     pass
+        # try:
+        #     sup_cp = driver.find_element_by_xpath("//*[@id='roomrtc_45000574663']/div/section/section[2]/aside[2]"
+        #                                           "/div[1]/div[3]/div[1]/p[2]/span").text
+        # except NoSuchElementException:
+        #     sup_cp = "--"
+        #     pass
+        # return std_ep, std_cp, sup_ep, sup_cp
+        for key, value in kwargs.items():
+            if key == "room_ids":
+                room_ids = value
+        room_type = []
+        room_price = []
+        returnlist = []
+        for i in range(len(room_ids)):
+            room_price.append([])
+            room_type.append(driver.find_element_by_xpath("//*[@id='"+room_ids[i] +
+                                                          "']/div/section/section[2]/aside[1]/div[1]/div[2]/p[1]").text)
+            try:
+                room_price[i].append(driver.find_element_by_xpath(
+                    "//*[@id='"+room_ids[i]+"']/div/section/section[2]/aside[1]/div[1]/div[3]/div[1]/p[2]/span").text)
+            except NoSuchElementException:
+                pass
+            try:
+                room_price[i].append(driver.find_element_by_xpath(
+                    "//*[@id='" + room_ids[i] + "']/div/section/section[2]/aside[2]/div[1]/div[3]/div[1]/p[2]/span").text)
+            except NoSuchElementException:
+                pass
+        for i in range(len(room_type)):
+            returnlist.append(room_type[i])
+            returnlist.append(room_price[i])
+        return returnlist
 
 
 class Mmt(object):

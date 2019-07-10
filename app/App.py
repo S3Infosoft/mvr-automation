@@ -32,7 +32,8 @@ def automation_mmt():
 @app.route('/automation/v1/goibibo', methods = ['POST'])
 def automation_goibibo():
     rdata = request.json
-    target = GoibiboImpl(rdata['search_text'],rdata['hotel_name'], rdata['checkin_date'], rdata['checkout_date'])
+    target = GoibiboImpl(rdata['search_text'],rdata['hotel_name'], rdata['checkin_date'],
+                         rdata['checkout_date'], rdata['room_ids'])
     result = target.run()
     return json.dumps(result)
 

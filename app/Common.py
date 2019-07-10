@@ -86,7 +86,7 @@ def sql_entry(listed, agent_name, din, dout, data):
     return returndata
 
 
-def main_run(agent, hotel_prop, search_text, din, dout, room_typeids, room_priceids):
+def main_run(agent, hotel_prop, search_text, din, dout, **kwargs):
     driver = start_driver()
     agent_name = agent.__class__.__name__
     driver.get(agent.target)
@@ -104,7 +104,7 @@ def main_run(agent, hotel_prop, search_text, din, dout, room_typeids, room_price
     agent.hotel_find(driver, hotel_prop)
     driver.switch_to.window(driver.window_handles[1])
     time.sleep(5)
-    data = agent.data_scraping(driver, room_typeids, room_priceids)
+    data = agent.data_scraping(driver, **kwargs)
     time.sleep(1)
     driver.quit()
     returndata = sql_entry(listed, agent_name, din, dout, data)

@@ -15,8 +15,8 @@ class BookingDotComImpl(OTA):
     def run(self):
         agent = Booking()
         try:
-            return main_run(agent, self.hotel_id, self.search_text,
-                            self.checkin, self.checkout, self.room_typeids, self.room_priceids)
+            return main_run(agent, self.hotel_id, self.search_text,self.checkin, self.checkout,
+                            room_typeids=self.room_typeids, room_priceids=self.room_priceids)
         except TimeoutException:
             return {"Status": "TIMEOUT ERROR"}
         # TODO: Invoke specific run method with booking.com parameters
