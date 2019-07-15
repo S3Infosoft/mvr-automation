@@ -61,7 +61,7 @@ class MasterMMT(object):
         driver = start_driver()
         agent.hotel_find(driver, din, dout)
         data = agent.data_scraping(driver)
-        # driver.quit()
+        driver.quit()
         returndata = sql_entry(listed, agent_name, din, dout, data)
         return returndata
 
@@ -69,7 +69,7 @@ class MasterMMT(object):
 def start_driver():
     global driver
     options = Options()
-    options.add_argument("--headless")
+    # options.add_argument("--headless")
     options.add_argument('--window-size=1420,1080')
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
