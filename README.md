@@ -29,12 +29,16 @@ MVR Channel Automation via Selenium
 
 - /automation/v1/mmt
   ```
-  {"search_text":"Ganpatipule", "checkin_date": "28/10/2019", "checkout_date": "29/10/2019" }
+  {"search_text":"Ganpatipule","hotel_id":"201811281301162654","hotel_name":"Mango Valley Resort Ganpatipule", "checkin_date": "28/10/2019", "checkout_date": "29/10/2019","room_id":["990001097019", "990001200931", "990001097020", "990001200939", "990001097021", "990001200965","990001302537"] }
   ```
 ##### Expected Sample success and error response
 - booking.com
   ```
   Invoked Booking.com API v1: {"Status": "OK", "Std_CP": "\u20b9 3,000", "Std_EP": "\u20b9 2,700", "Sup_CP": "\u20b9 4,000", "Sup_EP": "\u20b9 3,600", "check_in": "03/07/2019", "check_out": "04/07/2019", "listed_position": "1", "ota": "Booking", "run_time": "2019-07-02 08:15:22"}
+  
+- MMT
+  ```
+  {"Status": "OK", "check_in": "28/10/2019", "check_out": "29/10/2019", "listed_position": "6", "ota": "Mmt", "rates": {"Standard Double Room": "['INR 2,610', 'INR 2,871']", "Superior Double Room": "['INR 3,480', 'INR 3,759']", "Villa Oceanica Garden View": "['INR 6,525', 'INR 7,178']", "Villa Oceanica Sea View": "['INR 6,525']"}, "run_time": "2019-07-27 04:06:21"}
   
   
   {"Status":"TIMEOUT ERROR"}
