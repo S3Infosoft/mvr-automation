@@ -22,14 +22,8 @@ def main():
                      "rate_price_id_421644302_141698786_0_0_0", "rate_price_id_421644302_174652031_0_2_0",
                      "rate_price_id_421644305_174652031_4_2_0", "rate_price_id_421644303_174652031_0_2_0"]
     room_ids = ["roomrtc_45000574650", "roomrtc_45000574663", "roomrtc_45000653101", "roomrtc_45000574667"]
-    print(main_run(agent, hotel_id, search_text, checkin, checkout, room_typeids=room_typeids, room_priceids=room_priceids))
-
-    # try:
-    #     print(main_run(agent, hotel_name, search_text, checkin, checkout))
-    #     # return main_run(agent,  hotel_name, search_text, checkin, checkout)
-    # except TimeoutException:
-    #     print("TIMEOUT ERROR")
-    # pass
+    print(main_run(agent, hotel_id, search_text, checkin, checkout,
+                   room_typeids=room_typeids, room_priceids=room_priceids))
 
 
 def calender_ctrl(agent, cin, cout):
@@ -52,15 +46,15 @@ def calender_ctrl(agent, cin, cout):
 
 class MasterMMT(object):
     @staticmethod
-    def run(search_text, din, dout):
+    def run(search_text, hotel_id, hotel_name, din, dout, room_id):
         agent = Mmt()
         agent_name = agent.__class__.__name__
         driver = start_driver()
-        listed = agent.listing(driver, search_text, din, dout)
+        listed = agent.listing(driver, hotel_id, search_text, din, dout)
         driver.quit()
         driver = start_driver()
-        agent.hotel_find(driver, din, dout)
-        data = agent.data_scraping(driver)
+        agent.hotel_find(driver, hotel_id, hotel_name, din, dout)
+        data = agent.data_scraping(driver, room_id)
         driver.quit()
         returndata = sql_entry(listed, agent_name, din, dout, data)
         return returndata
@@ -74,8 +68,7 @@ def start_driver():
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
     # options.add_argument('--disable-dev-shm-usage')
-    driver = webdriver.Chrome(chrome_options=options,
-                               executable_path=r'chromedriver.exe')
+    driver = webdriver.Chrome(chrome_options=options, executable_path=r'chromedriver.exe')
     # driver = webdriver.Remote(
     #     command_executor='http://selenium-hub:4444/wd/hub',
     #     desired_capabilities=DesiredCapabilities.CHROME)
@@ -104,9 +97,11 @@ def sql_entry(listed, agent_name, din, dout, data):
     # returndata['Sup_EP'] = str(data[2])
     # returndata['Sup_CP'] = str(data[3])
     i = 0
+    rates = {}
     while i < len(data):
-        returndata[data[i]] = str(data[i+1])
+        rates[data[i]] = str(data[i+1])
         i = i+2
+    returndata['rates'] = rates
     returndata['Status'] = 'OK'
     return returndata
 

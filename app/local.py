@@ -43,6 +43,8 @@ class Booking(object):
 
     @staticmethod
     def data_scraping(driver, **kwargs):
+        room_priceids = None
+        room_typeids = None
         for key, value in kwargs.items():
             if key == "room_typeids":
                 room_typeids = value
@@ -119,7 +121,7 @@ class Goibibo(object):
                     driver.execute_script("window.scrollTo(" + str(i) + "," + str(i + 250) + ");")
                     time.sleep(0.5)
                     i = i + 250
-                    if i>7500:
+                    if i > 7500:
                         break
                     else:
                         continue
@@ -134,31 +136,7 @@ class Goibibo(object):
 
     @staticmethod
     def data_scraping(driver, **kwargs):
-        # try:
-        #     std_ep = driver.find_element_by_xpath("//*[@id='roomrtc_45000574650']/div/section/section[2]/aside[1]/"
-        #                                           "div[1]/div[3]/div[1]/p[2]/span").text
-        # except NoSuchElementException:
-        #     std_ep = "--"
-        #     pass
-        # try:
-        #     std_cp = driver.find_element_by_xpath("//*[@id='roomrtc_45000574650']/div/section/section[2]/aside[2]/"
-        #                                           "div[1]/div[3]/div[1]/p[2]/span").text
-        # except NoSuchElementException:
-        #     std_cp = "--"
-        #     pass
-        # try:
-        #     sup_ep = driver.find_element_by_xpath("//*[@id='roomrtc_45000574663']/div/section/section[2]/aside[1]"
-        #                                           "/div[1]/div[3]/div[1]/p[2]/span").text
-        # except NoSuchElementException:
-        #     sup_ep = "--"
-        #     pass
-        # try:
-        #     sup_cp = driver.find_element_by_xpath("//*[@id='roomrtc_45000574663']/div/section/section[2]/aside[2]"
-        #                                           "/div[1]/div[3]/div[1]/p[2]/span").text
-        # except NoSuchElementException:
-        #     sup_cp = "--"
-        #     pass
-        # return std_ep, std_cp, sup_ep, sup_cp
+        room_ids = None
         for key, value in kwargs.items():
             if key == "room_ids":
                 room_ids = value
@@ -175,8 +153,9 @@ class Goibibo(object):
             except NoSuchElementException:
                 pass
             try:
-                room_price[i].append(driver.find_element_by_xpath(
-                    "//*[@id='" + room_ids[i] + "']/div/section/section[2]/aside[2]/div[1]/div[3]/div[1]/p[2]/span").text)
+                room_price[i].append(driver.find_element_by_xpath("//*[@id='" + room_ids[i] +
+                                                                  "']/div/section/section[2]/aside[2]/"
+                                                                  "div[1]/div[3]/div[1]/p[2]/span").text)
             except NoSuchElementException:
                 pass
         for i in range(len(room_type)):
@@ -187,13 +166,14 @@ class Goibibo(object):
 
 class Mmt(object):
     @staticmethod
-    def listing(driver, search_text, din, dout):
+    def listing(driver, hotel_id, search_text, din, dout):
         cin, month, year = din.split("/")
         cout, month, year = dout.split("/")
         driver.get("https://www.makemytrip.com/hotels/hotel-listing/?checkin=" + month + cin + year +
                    "&checkout=" + month + cout + year + "&city=XGP&country=IN&searchText=" + search_text +
                    "%2C%20India&roomStayQualifier=2e0e")
-        a = driver.find_element_by_xpath("//*[@id='htl_id_seo_201811281301162654']")
+        a = driver.find_element_by_xpath("//*[@id='htl_id_seo_"+hotel_id+"']")
+        # a = driver.find_element_by_link_text("Mango Valley Resort Ganpatipule")
         i = 0
         time.sleep(2)
         while 1:
@@ -209,34 +189,35 @@ class Mmt(object):
                 i = i + 1
 
     @staticmethod
-    def hotel_find(driver, din, dout):
+    def hotel_find(driver, hotel_id, hotel_name, din, dout):
         cin, month, year = din.split("/")
         cout, month, year = dout.split("/")
+        hotel_name.replace(" ", "%20")
         driver.get("https://www.makemytrip.com/hotels/hotel-details/?checkin=" + month + cin + year +
-                   "&hotelId=201811281301162654&pType=details&screenType=details&checkout=" + month + cout + year +
-                   "&roomStayQualifier=2e0e&city=XGP&country=IN&type=HTL&searchText=Mango%20Valley%20"
-                   "Resort%20Ganpatipule&visitorId=0d107fed-19ac-481f-8e43-163a944ac760")
+                   "&hotelId="+hotel_id+"&pType=details&screenType=details&checkout=" + month + cout + year +
+                   "&roomStayQualifier=2e0e&city=XGP&country=IN&type=HTL&searchText="+hotel_name +
+                   "&visitorId=0d107fed-19ac-481f-8e43-163a944ac760")
 
     @staticmethod
-    def data_scraping(driver):
-        try:
-            std_ep = driver.find_element_by_xpath("//*[@id='990001097019']/div[2]/div[1]/div/span[1]").text
-        except NoSuchElementException:
-            std_ep = "--"
-            pass
-        try:
-            std_cp = driver.find_element_by_xpath("//*[@id='990001200931']/div[2]/div[1]/div/span[1]").text
-        except NoSuchElementException:
-            std_cp = "--"
-            pass
-        try:
-            sup_ep = driver.find_element_by_xpath("//*[@id='990001097020']/div[2]/div[1]/div/span[1]").text
-        except NoSuchElementException:
-            sup_ep = "--"
-            pass
-        try:
-            sup_cp = driver.find_element_by_xpath("//*[@id='990001200939']/div[2]/div[1]/div/span[1]").text
-        except NoSuchElementException:
-            sup_cp = "--"
-            pass
-        return std_ep, std_cp, sup_ep, sup_cp
+    def data_scraping(driver, room_id):
+        room_type = []
+        room_price = []
+        m = 0
+        for i in range(4):
+            try:
+                room_price.append([])
+                room_type.append(driver.find_element_by_xpath("//*[@id='RoomType']/div/div[2]/div["
+                                                              + str(i+2)+"]/div[1]/div/h2").text)
+                for j in range(2):
+                    room_price[i].append(driver.find_element_by_xpath("//*[@id='"+room_id[m] +
+                                                                      "']/div[2]/div[1]/div/span[1]").text)
+                    m = m+1
+                    if m >= len(room_id):
+                        break
+            except NoSuchElementException:
+                pass
+        returnlist = []
+        for i in range(len(room_type)):
+            returnlist.append(room_type[i])
+            returnlist.append(room_price[i])
+        return returnlist

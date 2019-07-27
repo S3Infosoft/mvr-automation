@@ -16,7 +16,8 @@ def hello():
 @app.route('/automation/v1/booking', methods=['POST'])
 def automation_booking():
     rdata = request.json
-    target = BookingDotComImpl(rdata['search_text'], rdata['hotel_id'], rdata['checkin_date'], rdata['checkout_date'], rdata['room_typeids'], rdata['room_priceids'])
+    target = BookingDotComImpl(rdata['search_text'], rdata['hotel_id'], rdata['checkin_date'],
+                               rdata['checkout_date'], rdata['room_typeids'], rdata['room_priceids'])
     result = target.run()
     return json.dumps(result)
 
@@ -24,7 +25,8 @@ def automation_booking():
 @app.route('/automation/v1/mmt', methods = ['POST'])
 def automation_mmt():
     rdata = request.json
-    target = MMTImpl(rdata['search_text'], rdata['checkin_date'], rdata['checkout_date'])
+    target = MMTImpl(rdata['search_text'], rdata['hotel_id'], rdata['hotel_name'],
+                     rdata['checkin_date'], rdata['checkout_date'], rdata['room_id'])
     result = target.run()
     return json.dumps(result)
 

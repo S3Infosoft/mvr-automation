@@ -29,22 +29,6 @@ def calender_ctrl(agent, cin, cout):
             return weekin, weekout
 
 
-class MasterMMT(object):
-    @staticmethod
-    def run(search_text, din, dout):
-        agent = Mmt()
-        agent_name = agent.__class__.__name__
-        driver = start_driver()
-        listed = agent.listing(driver, search_text, din, dout)
-        driver.quit()
-        driver = start_driver()
-        agent.hotel_find(driver, din, dout)
-        data = agent.data_scraping(driver)
-        driver.quit()
-        returndata = sql_entry(listed, agent_name, din, dout, data)
-        return returndata
-
-
 def start_driver():
     global driver
     options = Options()
@@ -52,9 +36,6 @@ def start_driver():
     options.add_argument('--window-size=1420,1080')
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
-    # options.add_argument('--disable-dev-shm-usage')
-    # driver = webdriver.Chrome(chrome_options=options,
-    #                            executable_path=r'chromedriver.exe')
     driver = webdriver.Remote(
         command_executor='http://selenium-hub:4444/wd/hub',
         desired_capabilities=DesiredCapabilities.CHROME)
@@ -79,9 +60,11 @@ def sql_entry(listed, agent_name, din, dout, data):
     returndata['check_out'] = dout
     returndata['listed_position'] = listed
     i = 0
+    rates = {}
     while i < len(data):
-        returndata[data[i]] = str(data[i+1])
+        rates[data[i]] = str(data[i+1])
         i = i+2
+    returndata['rates'] = rates
     returndata['Status'] = 'OK'
     return returndata
 
