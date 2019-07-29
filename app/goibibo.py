@@ -19,3 +19,5 @@ class GoibiboImpl(OTA):
                             room_ids=self.room_ids)
         except TimeoutException:
             return {"Status": "TIMEOUT ERROR"}
+        except Exception as e:
+            return {"Status": e}

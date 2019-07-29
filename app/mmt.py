@@ -28,3 +28,5 @@ class MMTImpl(OTA):
             return returndata
         except TimeoutException:
             return {"Status": "TIMEOUT ERROR"}
+        except Exception as e:
+            return {"Status": e}

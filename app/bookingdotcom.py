@@ -19,4 +19,6 @@ class BookingDotComImpl(OTA):
                             room_typeids=self.room_typeids, room_priceids=self.room_priceids)
         except TimeoutException:
             return {"Status": "TIMEOUT ERROR"}
+        except Exception as e:
+            return {"Status": e}
         # TODO: Invoke specific run method with booking.com parameters

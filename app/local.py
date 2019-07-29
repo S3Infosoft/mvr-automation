@@ -173,7 +173,6 @@ class Mmt(object):
                    "&checkout=" + month + cout + year + "&city=XGP&country=IN&searchText=" + search_text +
                    "%2C%20India&roomStayQualifier=2e0e")
         a = driver.find_element_by_xpath("//*[@id='htl_id_seo_"+hotel_id+"']")
-        # a = driver.find_element_by_link_text("Mango Valley Resort Ganpatipule")
         i = 0
         time.sleep(2)
         while 1:
@@ -208,7 +207,15 @@ class Mmt(object):
                 room_price.append([])
                 room_type.append(driver.find_element_by_xpath("//*[@id='RoomType']/div/div[2]/div["
                                                               + str(i+2)+"]/div[1]/div/h2").text)
-                for j in range(2):
+                k = 1
+                try:
+                    while k < len(room_id):
+                        driver.find_element_by_xpath("//*[@id='RoomType']/div/div[2]/div["
+                                             + str(i + 2) + "]/div[2]/div[" + str(k) + "]")
+                        k = k+1
+                except NoSuchElementException:
+                    count = k - 1
+                for j in range(count):
                     room_price[i].append(driver.find_element_by_xpath("//*[@id='"+room_id[m] +
                                                                       "']/div[2]/div[1]/div/span[1]").text)
                     m = m+1
