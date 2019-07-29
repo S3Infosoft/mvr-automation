@@ -20,4 +20,4 @@ class GoibiboImpl(OTA):
         except TimeoutException:
             return {"Status": "TIMEOUT ERROR"}
         except Exception as e:
-            return {"Status": e}
+            return {"Status": str(e)}

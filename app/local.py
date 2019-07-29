@@ -57,7 +57,10 @@ class Booking(object):
             room_type.append(driver.find_element_by_id(room_typeids[i]).get_attribute("data-room-name"))
             for j in range(len(room_priceids)):
                 if room_typeids[i].split("_")[3] == room_priceids[j].split("_")[3]:
-                    room_price[i].append(driver.find_element_by_id(room_priceids[j]).text)
+                    try:
+                        room_price[i].append(driver.find_element_by_id(room_priceids[j]).text)
+                    except NoSuchElementException:
+                        pass
         returnlist = []
         for i in range(len(room_type)):
             returnlist.append(room_type[i])

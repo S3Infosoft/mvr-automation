@@ -20,5 +20,5 @@ class BookingDotComImpl(OTA):
         except TimeoutException:
             return {"Status": "TIMEOUT ERROR"}
         except Exception as e:
-            return {"Status": e}
+            return {"Status": str(e)}
         # TODO: Invoke specific run method with booking.com parameters
