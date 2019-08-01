@@ -47,6 +47,8 @@ def calender_ctrl(agent, cin, cout):
 class MasterMMT(object):
     @staticmethod
     def run(search_text, hotel_id, hotel_name, din, dout, room_id):
+        current_time = datetime.datetime.now()
+        time1 = current_time.strftime("%Y-%m-%d %H:%M:%S")
         agent = Mmt()
         agent_name = agent.__class__.__name__
         driver = start_driver()
@@ -56,7 +58,7 @@ class MasterMMT(object):
         agent.hotel_find(driver, hotel_id, hotel_name, din, dout)
         data = agent.data_scraping(driver, room_id)
         driver.quit()
-        returndata = sql_entry(listed, agent_name, din, dout, data)
+        returndata = sql_entry(listed, agent_name, din, dout, data, time1)
         return returndata
 
 
@@ -78,16 +80,17 @@ def start_driver():
     return driver
 
 
-def sql_entry(listed, agent_name, din, dout, data):
+def sql_entry(listed, agent_name, din, dout, data, time1):
     current_time = datetime.datetime.now()
-    time1 = current_time.strftime("%Y-%m-%d %H:%M:%S")
+    time2 = current_time.strftime("%Y-%m-%d %H:%M:%S")
     # sql = Database()
     # sql.create_table()
     # sql.insert_table(time1, agent_name, din, dout, listed,
     #                  str(data[0]), str(data[1]), str(data[2]), str(data[3]))
     # sql.print_db()
     returndata = {}
-    returndata['run_time'] = time1
+    returndata['start_time'] = time1
+    returndata['end_time'] = time2
     returndata['ota'] = agent_name
     returndata['check_in'] = din
     returndata['check_out'] = dout
@@ -107,6 +110,8 @@ def sql_entry(listed, agent_name, din, dout, data):
 
 
 def main_run(agent, hotel_prop, search_text, din, dout, **kwargs):
+    current_time = datetime.datetime.now()
+    time1 = current_time.strftime("%Y-%m-%d %H:%M:%S")
     driver = start_driver()
     agent_name = agent.__class__.__name__
     driver.get(agent.target)
@@ -127,7 +132,7 @@ def main_run(agent, hotel_prop, search_text, din, dout, **kwargs):
     data = agent.data_scraping(driver, **kwargs)
     time.sleep(1)
     driver.quit()
-    returndata = sql_entry(listed, agent_name, din, dout, data)
+    returndata = sql_entry(listed, agent_name, din, dout, data, time1)
     return returndata
 
 
