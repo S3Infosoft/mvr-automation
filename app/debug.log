@@ -1,0 +1,3 @@
+[0306/203342.181:ERROR:file_io_win.cc(161)] CreateFile C:\Users\SANSKA~1\AppData\Local\Temp\scoped_dir15444_1190636279\Crashpad\settings.dat: The system cannot find the path specified. (0x3)
+[0306/203342.183:ERROR:file_io_win.cc(170)] CreateFile C:\Users\SANSKA~1\AppData\Local\Temp\scoped_dir15444_1190636279\Crashpad\reports\aab791f5-beec-498d-adde-57a368f140f4.dmp: The system cannot find the path specified. (0x3)
+[0306/203342.183:ERROR:crash_report_exception_handler.cc(97)] PrepareNewCrashReport failed
