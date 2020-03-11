@@ -18,23 +18,11 @@ def main():
     hotel_id = "4216443"
     checkin = "30/03/2019"
     checkout = "31/03/2019"
-    # room_typeids = [("%s" % S), "room_type_id_421644302",
-    #                 "room_type_id_421644305", "room_type_id_421644303"]
     room_typeids = ["room_type_id_421644306", "room_type_id_421644302",
                     "room_type_id_421644305", "room_type_id_421644303"]
-    # room_typeids=[("%s" % S),"room_type_id_481319104","room_type_id_481319102",
-    #               "room_type_id_481319102","room_type_id_481319102"]
-    # room_priceids = ["rate_price_id_421644301_141698786_0_0_0", "rate_price_id_421644301_174652031_0_2_0",
-    #                  "rate_price_id_421644302_141698786_0_0_0", "rate_price_id_421644302_174652031_0_2_0",
-    #                  "rate_price_id_421644305_174652031_4_2_0", "rate_price_id_421644303_174652031_0_2_0"]
     room_priceids = ["421644306_174652031_0_42_0",
                      "421644302_141698786_0_42_0", "421644302_174652031_0_42_0",
                      "421644305_174652031_0_42_0", "421644303_174652031_0_42_0"]
-
-    # room_priceids=["rate_price_id_481319104_181948871_0_1_0","rate_price_id_481319102_181948871_2_2_0",
-    #                "rate_price_id_481319102_181948871_3_2_0","rate_price_id_481319101_181948871_2_2_0",
-    #                "rate_price_id_481319101_181948871_3_2_0","rate_price_id_481319103_181948871_0_1_0",
-    #                "rate_price_id_481319103_181948871_1_1_0"]
     room_ids = ["roomrtc_45000574650", "roomrtc_45000574663", "roomrtc_45000653101", "roomrtc_45000574667"]
     print(main_run(agent, hotel_id, search_text, checkin, checkout,
                    room_typeids=room_typeids, room_priceids=room_priceids))
@@ -67,10 +55,9 @@ class MasterMMT(object):
         # print(f"current time is {current_time} \n time1={time1}")
         agent = Mmt()
         agent_name = agent.__class__.__name__
-        # print(agent_name)
+
         driver = start_driver()
         listed = agent.listing(driver, hotel_id, search_text, din, dout)
-        # print(f"listed={listed}")
         driver.quit()
         driver = start_driver()
         agent.hotel_find(driver, hotel_id, hotel_name, din, dout)

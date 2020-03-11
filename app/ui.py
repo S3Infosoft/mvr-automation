@@ -17,9 +17,6 @@ def main():
     #
     # room_typeids = ["room_type_id_421644306", "room_type_id_421644302",
     #                 "room_type_id_421644305", "room_type_id_421644303"]
-    # # room_priceids = ["rate_price_id_421644301_141698786_0_0_0", "rate_price_id_421644301_174652031_0_2_0",
-    # #                  "rate_price_id_421644302_141698786_0_0_0", "rate_price_id_421644302_174652031_0_2_0",
-    # #                  "rate_price_id_421644305_174652031_4_2_0", "rate_price_id_421644303_174652031_0_2_0"]
     # room_priceids = ["421644306_174652031_0_42_0",
     #                  "421644302_141698786_0_42_0", "421644302_174652031_0_42_0",
     #                  "421644305_174652031_0_42_0", "421644303_174652031_0_42_0"]
@@ -35,8 +32,6 @@ def main():
     # room_ids = ["roomrtc_45000750981", "roomrtc_45000574663", "roomrtc_45000717373",
     #             "roomrtc_45000574667"]
     # result=main_run(agent, hotel_name, search_text, checkin, checkout, room_ids=room_ids)
-    # # print(result)
-    # print(result['rates']['Rustic Villa with Breakfast'])
     # if result['listed_position']=="15" and result['rates']['Rustic Villa with Breakfast'] == "['5035']" and result['rates']['Superior Double Room with Breakfast'] == "['4297']" and result['rates']['Sea View Villa2 with Breakfast']== "['5730']" and result['rates']['Villa Oceanica Garden View with Breakfast']=="['7274']":
     #     print("Correct result generated and result is :")
     #     print(result)
