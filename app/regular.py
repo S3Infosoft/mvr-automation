@@ -8,19 +8,33 @@ from local import *
 from ddl_sql import Database
 import datetime
 
+S = "room_type_id_421644301"
+
 
 def main():
     agent = Booking()
     search_text = "Ratnagiri"
     hotel_name = "Mango Valley Resort Ganpatipule"
     hotel_id = "4216443"
-    checkin = "11/07/2019"
-    checkout = "12/07/2019"
-    room_typeids = ["room_type_id_421644301", "room_type_id_421644302",
+    checkin = "30/03/2019"
+    checkout = "31/03/2019"
+    # room_typeids = [("%s" % S), "room_type_id_421644302",
+    #                 "room_type_id_421644305", "room_type_id_421644303"]
+    room_typeids = ["room_type_id_421644306", "room_type_id_421644302",
                     "room_type_id_421644305", "room_type_id_421644303"]
-    room_priceids = ["rate_price_id_421644301_141698786_0_0_0", "rate_price_id_421644301_174652031_0_2_0",
-                     "rate_price_id_421644302_141698786_0_0_0", "rate_price_id_421644302_174652031_0_2_0",
-                     "rate_price_id_421644305_174652031_4_2_0", "rate_price_id_421644303_174652031_0_2_0"]
+    # room_typeids=[("%s" % S),"room_type_id_481319104","room_type_id_481319102",
+    #               "room_type_id_481319102","room_type_id_481319102"]
+    # room_priceids = ["rate_price_id_421644301_141698786_0_0_0", "rate_price_id_421644301_174652031_0_2_0",
+    #                  "rate_price_id_421644302_141698786_0_0_0", "rate_price_id_421644302_174652031_0_2_0",
+    #                  "rate_price_id_421644305_174652031_4_2_0", "rate_price_id_421644303_174652031_0_2_0"]
+    room_priceids = ["421644306_174652031_0_42_0",
+                     "421644302_141698786_0_42_0", "421644302_174652031_0_42_0",
+                     "421644305_174652031_0_42_0", "421644303_174652031_0_42_0"]
+
+    # room_priceids=["rate_price_id_481319104_181948871_0_1_0","rate_price_id_481319102_181948871_2_2_0",
+    #                "rate_price_id_481319102_181948871_3_2_0","rate_price_id_481319101_181948871_2_2_0",
+    #                "rate_price_id_481319101_181948871_3_2_0","rate_price_id_481319103_181948871_0_1_0",
+    #                "rate_price_id_481319103_181948871_1_1_0"]
     room_ids = ["roomrtc_45000574650", "roomrtc_45000574663", "roomrtc_45000653101", "roomrtc_45000574667"]
     print(main_run(agent, hotel_id, search_text, checkin, checkout,
                    room_typeids=room_typeids, room_priceids=room_priceids))
@@ -36,6 +50,7 @@ def calender_ctrl(agent, cin, cout):
     weekout = str(0)
     for i in range(7):
         temp = driver.find_element_by_xpath(agent.week_finder+str(i+1)+"]").text.split(" ")
+        print(temp)
         if any(cin in s for s in temp) and flag1:
             weekin = str(i+1)
             flag1 = False
@@ -49,10 +64,13 @@ class MasterMMT(object):
     def run(search_text, hotel_id, hotel_name, din, dout, room_id):
         current_time = datetime.datetime.now()
         time1 = current_time.strftime("%Y-%m-%d %H:%M:%S")
+        # print(f"current time is {current_time} \n time1={time1}")
         agent = Mmt()
         agent_name = agent.__class__.__name__
+        # print(agent_name)
         driver = start_driver()
         listed = agent.listing(driver, hotel_id, search_text, din, dout)
+        # print(f"listed={listed}")
         driver.quit()
         driver = start_driver()
         agent.hotel_find(driver, hotel_id, hotel_name, din, dout)
@@ -76,6 +94,7 @@ def start_driver():
     #     desired_capabilities=DesiredCapabilities.CHROME)
 
     driver.set_page_load_timeout(30)
+    driver.implicitly_wait(10)
     driver.maximize_window()
     return driver
 
@@ -134,6 +153,8 @@ def main_run(agent, hotel_prop, search_text, din, dout, **kwargs):
     driver.quit()
     returndata = sql_entry(listed, agent_name, din, dout, data, time1)
     return returndata
+
+# return True if element is visible within 30 seconds, otherwise False
 
 
 if __name__ == "__main__":

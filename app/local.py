@@ -1,8 +1,11 @@
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.support.ui import Select
+
 from selenium.webdriver.common.by import By
 import time
+from selenium.webdriver.common.keys import Keys
 
 
 class Booking(object):
@@ -24,6 +27,7 @@ class Booking(object):
     @staticmethod
     def proceed(driver):
         # driver.find_element_by_xpath(Booking.search_id).send_keys(Keys.ENTER)
+        # driver.find_element_by_xpath("//*[@id='frm']/div[1]/div[4]/div[2]/button").send_keys(Keys.ENTER) #its my code
         pass
 
     @staticmethod
@@ -54,12 +58,30 @@ class Booking(object):
         room_price = []
         for i in range(len(room_typeids)):
             room_price.append([])
+
             room_type.append(driver.find_element_by_id(room_typeids[i]).get_attribute("data-room-name"))
             for j in range(len(room_priceids)):
-                if room_typeids[i].split("_")[3] == room_priceids[j].split("_")[3]:
+                if room_typeids[i].split("_")[3] == room_priceids[j].split("_")[0]:
                     try:
-                        room_price[i].append(driver.find_element_by_id(room_priceids[j]).text)
+                        a=driver.find_element_by_id("hprt_nos_select_" + room_priceids[j]).text
+
+                        ele=a
+                        s1=ele.find('(')
+                        s2=ele.find(')')
+                        pr=ele[s1+1:s2]
+
+
+                        # room_price[i].append(driver.find_element_by_id("hprt_nos_select_"+room_priceids[j]).text)
+                        room_price[i].append(pr)
+                        # print(driver.find_element_by_xpath("//*[@id=hprt_nos_select_"+room_priceids[j]+"]/option[2]").text)
+                        #  driver.find_element_by_xpath("//*[@id=hprt_nos_select_"+room_priceids[j]+"]/option[2]").click()
+                        #  print("ab")
+
+                         # print(driver.find_element_by_xpath("//*[@data-block-id="+room_priceids[j]+"]/td[3]/div/div[2]/div[1]"))
+                         # room_price[i].append(driver.find_element_by_xpath("//*[@data-block-id="+room_priceids[j]+"]/td[3]/div/div[2]/div[1]").text)
+                    # // *[ @ id = "hprt-table"] / tbody / tr[6] / td[3] / div / div[2] / div[1]
                     except NoSuchElementException:
+                        print("error")
                         pass
         returnlist = []
         for i in range(len(room_type)):
@@ -148,11 +170,13 @@ class Goibibo(object):
         returnlist = []
         for i in range(len(room_ids)):
             room_price.append([])
-            room_type.append(driver.find_element_by_xpath("//*[@id='"+room_ids[i] +
-                                                          "']/div/section/section[2]/aside[1]/div[1]/div[2]/p[1]").text)
+            # // *[ @ id = "roomrtc_45000750981"] / div / section / section[2] / aside[2] / div / div[1] / p[1]
+            # room_type.append(driver.find_element_by_xpath("//*[@id='"+room_ids[i] + "']/div/section/section[2]/aside[1]/div[1]/div[2]/p[1]").text)
+            room_type.append(driver.find_element_by_xpath("//*[@id='"+room_ids[i] + "']/div/section/section[2]/aside[2]/div/div[1]/p[1]").text)
             try:
-                room_price[i].append(driver.find_element_by_xpath(
-                    "//*[@id='"+room_ids[i]+"']/div/section/section[2]/aside[1]/div[1]/div[3]/div[1]/p[2]/span").text)
+                # // *[ @ id = "roomrtc_45000750981"] / div / section / section[2] / aside[2] / div / div[2] / div[1] / p[2] / span
+                # room_price[i].append(driver.find_element_by_xpath("//*[@id='"+room_ids[i]+"']/div/section/section[2]/aside[1]/div[1]/div[3]/div[1]/p[2]/span").text)
+                room_price[i].append(driver.find_element_by_xpath("//*[@id='"+room_ids[i]+"']/div/section/section[2]/aside[2]/div/div[2]/div[1]/p[2]/span").text)
             except NoSuchElementException:
                 pass
             try:
@@ -176,6 +200,8 @@ class Mmt(object):
                    "&checkout=" + month + cout + year + "&city=XGP&country=IN&searchText=" + search_text +
                    "%2C%20India&roomStayQualifier=2e0e")
         a = driver.find_element_by_xpath("//*[@id='htl_id_seo_"+hotel_id+"']")
+        print(f"a={a} and a text = {a.text}")
+
         i = 0
         time.sleep(2)
         while 1:
@@ -185,6 +211,7 @@ class Mmt(object):
             except NoSuchElementException:
                 b = driver.find_element_by_xpath(
                     "//*[@id='Listing_hotel_" + str(i) + "']/a/div/div[1]/div[2]/div[1]/div[1]/p/span")
+            print(f"b={b} and b text = {b.text}")
             if a == b:
                 return str(i + 1)
             else:
@@ -225,9 +252,11 @@ class Mmt(object):
                     if m >= len(room_id):
                         break
             except NoSuchElementException:
+                print(i)
                 pass
         returnlist = []
         for i in range(len(room_type)):
             returnlist.append(room_type[i])
             returnlist.append(room_price[i])
+        print(returnlist)
         return returnlist
