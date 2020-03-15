@@ -199,7 +199,15 @@ class Mmt(object):
         driver.get("https://www.makemytrip.com/hotels/hotel-listing/?checkin=" + month + cin + year +
                    "&checkout=" + month + cout + year + "&city=XGP&country=IN&searchText=" + search_text +
                    "%2C%20India&roomStayQualifier=2e0e")
-        a = driver.find_element_by_xpath("//*[@id='htl_id_seo_"+hotel_id+"']")
+        driver.find_element_by_xpath('//*[@id="root"]/div/div[3]/div[2]').click()
+        driver.find_element_by_xpath("//*[@id='hsw_search_button']").click()
+        while True:
+            driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
+            try:
+                a = driver.find_element_by_xpath('//*[@id="htl_id_seo_'+hotel_id+'"]')
+                break
+            except:
+                continue
         print(f"a={a} and a text = {a.text}")
 
         i = 0

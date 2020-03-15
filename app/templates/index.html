@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}MVR automation{% endblock %}
+{% block body %}
+
+<div class="container">
+    <center><br><br>
+        <div class="alert alert-success" role="alert">
+  Automation details
+</div><br><br>
+        <form method="post" action="/automation/process_data">
+            <label>Enter the Checkin data</label>&nbsp;&nbsp;&nbsp;&nbsp;<input type="date" name="cindt"><br><br>
+            <label>Enter the Checkout data</label>&nbsp;&nbsp;&nbsp;<input type="date" name="coutdt"><br><br>
+            <label>Select the agent</label>&nbsp;&nbsp;&nbsp;&nbsp; <select name="agt">
+            <option value="booking">Booking.com</option>
+            <option value="goibibo">Goibibo.com</option>
+            <option value="mmt">Make My Trip</option>
+        </select><br><br>
+            <button class="btn btn-danger" type="submit">Run </button>
+
+        </form>
+    </center>
+</div>
+
+{% endblock %}
