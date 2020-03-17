@@ -1,5 +1,7 @@
 .idea/
 .DS_Store
-./app/Data1.db
+./app/*.db
 ./app/__pycache__/
 ./app/chromedriver.exe
+./app/geckodriver.exe
+
