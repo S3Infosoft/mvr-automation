@@ -2,7 +2,6 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import Select
-
 from selenium.webdriver.common.by import By
 import time
 from selenium.webdriver.common.keys import Keys
@@ -34,10 +33,13 @@ class Booking(object):
     def listing(driver, hotel_id):
         listed = "-"
         for i in range(40):
-            if ((driver.find_element_by_xpath("//*[@id='hotellist_inner']/div[@data-hotelid='"+hotel_id+"']")) == (
-                 driver.find_element_by_xpath("//*[@id='hotellist_inner']/div[" + str(i + 1) + "]"))):
-                listed = str("%01d" % ((i + 1) / 2))
-                break
+                wait = WebDriverWait(driver, 10)
+                wait.until(ec.visibility_of_element_located((By.XPATH, "//*[@id='hotellist_inner']/div[@data-hotelid='"+hotel_id+"']")))
+                if ((driver.find_element_by_xpath("//*[@id='hotellist_inner']/div[@data-hotelid='"+hotel_id+"']")) == (
+                     driver.find_element_by_xpath("//*[@id='hotellist_inner']/div[" + str(i + 1) + "]"))):
+                    listed = str("%01d" % ((i + 1) / 2))
+                    break
+
         return listed
 
     @staticmethod
@@ -199,6 +201,10 @@ class Mmt(object):
         driver.get("https://www.makemytrip.com/hotels/hotel-listing/?checkin=" + month + cin + year +
                    "&checkout=" + month + cout + year + "&city=XGP&country=IN&searchText=" + search_text +
                    "%2C%20India&roomStayQualifier=2e0e")
+        driver.maximize_window();
+        wait = WebDriverWait(driver, 10)
+        wait.until(ec.visibility_of_element_located(
+            (By.XPATH, '//*[@id="root"]/div/div[3]/div[2]')))
         driver.find_element_by_xpath('//*[@id="root"]/div/div[3]/div[2]').click()
         driver.find_element_by_xpath("//*[@id='hsw_search_button']").click()
         while True:
@@ -254,6 +260,11 @@ class Mmt(object):
                 except NoSuchElementException:
                     count = k - 1
                 for j in range(count):
+                    wait = WebDriverWait(driver, 10)
+                    wait.until(ec.visibility_of_element_located(
+                        (By.XPATH, "//*[@id='"+room_id[m] +
+                                          "']/div[2]/div[1]/div/span[1]")))
+
                     room_price[i].append(driver.find_element_by_xpath("//*[@id='"+room_id[m] +
                                                                       "']/div[2]/div[1]/div/span[1]").text)
                     m = m+1

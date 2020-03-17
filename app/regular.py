@@ -4,6 +4,7 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from local import *
+import requests
 # from Common import main_run
 from ddl_sql import Database
 import datetime
@@ -70,19 +71,25 @@ class MasterMMT(object):
 def start_driver():
     global driver
     options = Options()
-    # options.add_argument("--headless")
+    options.add_argument("--headless")
     options.add_argument('--window-size=1420,1080')
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
-    # options.add_argument('--disable-dev-shm-usage')
+    options.add_argument('--disable-dev-shm-usage')
     driver = webdriver.Chrome(chrome_options=options, executable_path=r'chromedriver.exe')
-    # driver = webdriver.Remote(
-    #     command_executor='http://selenium-hub:4444/wd/hub',
-    #     desired_capabilities=DesiredCapabilities.CHROME)
-
+    url = driver.command_executor._url
     driver.set_page_load_timeout(30)
     driver.implicitly_wait(10)
     driver.maximize_window()
+    caps = DesiredCapabilities.CHROME.copy()
+    caps['max_duration']=10
+    print(caps)
+    driver = webdriver.Remote(
+        command_executor=url,
+        # desired_capabilities=DesiredCapabilities.CHROME)
+        desired_capabilities=caps)
+
+
     return driver
 
 

@@ -32,7 +32,7 @@ def main():
     # room_ids = ["roomrtc_45000750981", "roomrtc_45000574663", "roomrtc_45000717373",
     #             "roomrtc_45000574667"]
     # result=main_run(agent, hotel_name, search_text, checkin, checkout, room_ids=room_ids)
-    # if result['listed_position']=="15" and result['rates']['Rustic Villa with Breakfast'] == "['5035']" and result['rates']['Superior Double Room with Breakfast'] == "['4297']" and result['rates']['Sea View Villa2 with Breakfast']== "['5730']" and result['rates']['Villa Oceanica Garden View with Breakfast']=="['7274']":
+    # if result['listed_position']=="15" and result['rates']['Rustic Villa with Breakfast'] == "['5172']" and result['rates']['Superior Double Room with Breakfast'] == "['4297']" and result['rates']['Sea View Villa2 with Breakfast']== "['5730']" and result['rates']['Villa Oceanica Garden View with Breakfast']=="['7274']":
     #     print("Correct result generated and result is :")
     #     print(result)
     # else:
@@ -54,7 +54,7 @@ def main():
     hotel_id = "200908241107085994"
     room_id = ["990000758441", "990000758470", "990000009534", "990000758436", "990000308366", "990000009536", "990000758437"]
     result=agent.run(search_text, hotel_id, hotel_name, checkin, checkout, room_id)
-    if result['listed_position']=='4' and result['rates']['Standard Garden Room'] == "['INR 4,768', 'INR 5,172']" and result['rates']['Tropical garden Villa']=="['INR 6,601', 'INR 8,215']" and result['rates']['Executive Wing Room']=="['INR 8,435', 'INR 10,562']" and result['rates']['Beachfront Villa']=="['INR 11,410']":
+    if result['listed_position']=='4' and result['rates']['Standard Garden Room'] == "['INR 5,031', 'INR 5,457']" and result['rates']['Tropical garden Villa']=="['INR 6,601', 'INR 8,215']" and result['rates']['Executive Wing Room']=="['INR 8,435', 'INR 10,562']" and result['rates']['Beachfront Villa']=="['INR 11,410']":
         print("Correct result generated and result is :")
         print(result)
     else:

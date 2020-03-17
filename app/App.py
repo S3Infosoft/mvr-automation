@@ -104,15 +104,15 @@ def automation_for_booking(cindate,coutdate,id):
     room_priceids = ["421644306_174652031_0_42_0",
                      "421644302_141698786_0_42_0", "421644302_174652031_0_42_0",
                      "421644305_174652031_0_42_0", "421644303_174652031_0_42_0"]
-    try:
-        result=main_run(agent, hotel_id, search_text, checkin, checkout,room_typeids=room_typeids, room_priceids=room_priceids)
-        update_entry(id, end_date, "some result", "Finished", "Succesfully completed")
-        # print(result)
-        return render_template('result.html',param=result)
-    except Exception as e:
-        print(e.__class__.__name__)
-        update_entry(id, end_date, "No result", "Error", e.__class__.__name__)
-        return f"Error occured of type {e.__class__.__name__}"
+    # try:
+    result=main_run(agent, hotel_id, search_text, checkin, checkout,room_typeids=room_typeids, room_priceids=room_priceids)
+    update_entry(id, end_date, "some result", "Finished", "Succesfully completed")
+    # print(result)
+    return render_template('result.html',param=result)
+    # except Exception as e:
+    #     print(e.__class__.__name__)
+    #     update_entry(id, end_date, "No result", "Error", e.__class__.__name__)
+    #     return f"Error occured of type {e.__class__.__name__}"
 
 @app.route('/automation/v1/goibibo/<cindate>/<coutdate>/<id>', methods=['POST'])
 def automation_for_goibibo(cindate,coutdate,id):
