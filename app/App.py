@@ -7,7 +7,10 @@ from mmt import MMTImpl
 from local import *
 from regular import main_run
 from regular import MasterMMT
-import sqlite3
+from bson.json_util import dumps
+from bson.objectid import ObjectId
+
+import pymongo
 import datetime
 app = Flask(__name__)
 
@@ -48,23 +51,32 @@ class OtaRunResponse(object):
             data['comments'] = self.comments
         return data
 
+#
 
 def data_entry(ota,response,start_date,end_date,status,comment):
-    conn = sqlite3.connect('Data2.db')
-
-    conn.execute('CREATE table IF NOT EXISTS Completed_test(id integer primary key autoincrement,start_date varchar(20),end_date varchar(20),ota,response varchar(1000),status varchar(100),comments varchar(100))');
-    conn.execute(f"INSERT INTO Completed_test(start_date,end_date,ota,response,status,comments) VALUES ('{start_date}','{end_date}' ,'{ota}', '{response}', '{status}', '{comment}')");
-    conn.commit()
-    cursor = conn.execute("SELECT max(id) from Completed_test")
-    for i in cursor:
-        assign_id=i[0]
-    conn.close()
+    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+    mydb=myclient["mvr_results"]
+    mycol=mydb["Completed_test"]
+    result={'start_date':start_date,
+            'end_date':end_date,
+            'ota':ota,
+            'response':response,
+            'status':status,
+            'comments':comment}
+    x = mycol.insert_one(result)
+    assign_id=x.inserted_id
     return str(assign_id)
+
 def update_entry(id,end_date,response,status,comment):
-    conn = sqlite3.connect('Data2.db')
-    conn.execute(f"UPDATE Completed_test SET end_date = '{end_date}',response='{response}',status='{status}',comments='{comment}' where id = '{int(id)}'")
-    conn.commit()
-    conn.close()
+    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+    mydb = myclient["mvr_results"]
+    mycol = mydb["Completed_test"]
+    new_result={"$set":{'end_date':end_date,'response':response,'status':status,'comments':comment}}
+    mycol.update_one({'_id':ObjectId(id)},new_result)
+    # result = mycol.find({'_id': ObjectId(id)})
+    # result = eval(dumps(result))
+    # print(result[0])
+
 
 @app.route("/")
 def hello():
@@ -106,7 +118,7 @@ def automation_for_booking(cindate,coutdate,id):
                      "421644305_174652031_0_42_0", "421644303_174652031_0_42_0"]
     # try:
     result=main_run(agent, hotel_id, search_text, checkin, checkout,room_typeids=room_typeids, room_priceids=room_priceids)
-    update_entry(id, end_date, "some result", "Finished", "Succesfully completed")
+    update_entry(id, end_date,result, "Finished", "Succesfully completed")
     # print(result)
     return render_template('result.html',param=result)
     # except Exception as e:
@@ -127,10 +139,9 @@ def automation_for_goibibo(cindate,coutdate,id):
                            "roomrtc_45000574667"]
     current_time = datetime.datetime.now()
     end_date = current_time.strftime("%Y-%m-%d")
-    a=json.dumps({'abc':200,'def':'300'})
 # try:
     result=main_run(agent, hotel_name, search_text, checkin, checkout, room_ids=room_ids)
-    update_entry(id,end_date,f"{a}", "Finished", "Succesfully completed")
+    update_entry(id,end_date,result, "Finished", "Succesfully completed")
     return render_template('result.html', param=result)
     # except Exception as e:
     #     print(e.__class__.__name__)
@@ -171,7 +182,7 @@ def automation_for_mmt(cindate,coutdate,id):
 
     result = agent.run(search_text, hotel_id, hotel_name, checkin, checkout, room_id)
     print(result)
-    update_entry(id, end_date, "some result", "Finished", "Succesfully completed")
+    update_entry(id, end_date,result, "Finished", "Succesfully completed")
     return render_template('result.html', param=result)
     # except Exception as e:
     #     print(e.__class__.__name__)
