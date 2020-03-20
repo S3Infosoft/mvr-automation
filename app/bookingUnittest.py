@@ -25,18 +25,31 @@ class BookingTest(unittest.TestCase):
                          "421644305_174652031_0_42_0", "421644303_174652031_0_42_0"]
         self.result = main_run(self.agent, hotel_id, search_text, checkin, checkout, room_typeids=room_typeids,
                           room_priceids=room_priceids)
+        data1 = eval(self.result['rates']['Superior Suite with Sea View'])
+        data1[0]=data1[0].replace('₹ ','')
+        data1[0]=data1[0].replace(',', '')
+        print(data1[0])
+
+        self.data1 = float(data1[0])
+        data2 = eval(self.result['rates']['Deluxe Bungalow with Sea View'])
+        data2[0] = data2[0].replace('₹ ', '')
+        data2[0] = data2[0].replace(',', '')
+        self.data2 = float(data2[0])
+        data3=self.result['rates']
+        self.data3=len(data3)
+        print(self.result)
 
 
-    # Testing Single Input Field.
     def test_TC1(self):
-        assert "3" in self.result['listed_position']
-        assert "['₹ 17,500']" in self.result['rates']['Superior Suite with Sea View']
+        assert self.data1>15000
+        assert self.data2>5000
+        assert self.data3==4
 
 
     def test_TC2(self):
-        assert "['₹ 17,507']" in self.result['rates']['Superior Suite with Sea View']
+        assert self.data1<15000
 
     # Closing the browser.
-    def tearDown(self):
-        pass
+    # def tearDown(self):
+    #     pass
 
