@@ -13,6 +13,7 @@
         <label>Check in date: </label>&nbsp;&nbsp;&nbsp;&nbsp;{{param['check_in']}}<br><br>
         <label>Check out date: </label>&nbsp;&nbsp;&nbsp;&nbsp;{{param['check_out']}}<br><br>
         <label>Position of hotel in website </label>&nbsp;&nbsp;&nbsp;&nbsp;{{param['listed_position']}}<br><br>
+        {% if param['Status'] == 'OK' %}
         <label> <b>Rates is as follows</b> </label><br><br>
         <table class="table">
             <thead class="thead thead-dark">
@@ -36,6 +37,10 @@
             {% endfor %}
             </tbody>
         </table>
+        {% endif %}
+        {% if param['Status']=='NOT OK' %}
+              <label> <b>{{ param['rates'] }}</b> </label><br><br>
+        {% endif %}
     </center>
 </div>
 

@@ -59,7 +59,12 @@ class MasterMMT(object):
 
         driver = start_driver()
         listed = agent.listing(driver, hotel_id, search_text, din, dout)
-        driver.quit()
+        if int(listed)==0:
+            returndata = sql_entry('not found', agent_name, din, dout, f'{hotel_name} not found', time1)
+            driver.quit()
+            return returndata
+
+
         driver = start_driver()
         agent.hotel_find(driver, hotel_id, hotel_name, din, dout)
         data = agent.data_scraping(driver, room_id)
@@ -114,6 +119,11 @@ def sql_entry(listed, agent_name, din, dout, data, time1):
     # returndata['Sup_CP'] = str(data[3])
     i = 0
     rates = {}
+    if type(data)==str:
+        returndata['rates'] = data
+        returndata['Status'] = 'NOT OK'
+        return returndata
+
     while i < len(data):
         rates[data[i]] = str(data[i+1])
         i = i+2
@@ -126,23 +136,72 @@ def main_run(agent, hotel_prop, search_text, din, dout, **kwargs):
     current_time = datetime.datetime.now()
     time1 = current_time.strftime("%Y-%m-%d %H:%M:%S")
     driver = start_driver()
+    driver.maximize_window()
     agent_name = agent.__class__.__name__
     driver.get(agent.target)
     cin, month, year = din.split("/")
     cout, month, year = dout.split("/")
     datein = year+"-"+month+"-"+cin
     dateout = year+"-"+month+"-"+cout
-    weekin, weekout = calender_ctrl(agent, cin, cout)
+    try:
+        weekin, weekout = calender_ctrl(agent, cin, cout)
+    except Exception:
+        return driver
     driver.find_element_by_xpath(agent.day_in(weekin, datein)).click()
     driver.find_element_by_xpath(agent.day_out(weekout, dateout)).click()
     driver.find_element_by_id(agent.search_id).send_keys(search_text+Keys.ENTER)
     time.sleep(1)
     agent.proceed(driver)
     listed = agent.listing(driver, hotel_prop)
+    # print('a')
+    if int(listed)==0:
+        returndata=sql_entry('Not found',agent_name,din,dout,f'{hotel_prop} not found',time1)
+        driver.quit()
+        return returndata
+    # print('b')
     agent.hotel_find(driver, hotel_prop)
     driver.switch_to.window(driver.window_handles[1])
     time.sleep(5)
     data = agent.data_scraping(driver, **kwargs)
+    time.sleep(1)
+    driver.quit()
+    returndata = sql_entry(listed, agent_name, din, dout, data, time1)
+    return returndata
+
+def main_run_for_new_goibibo(driver,agent, hotel_prop, search_text, din, dout, **kwargs):
+    current_time = datetime.datetime.now()
+    time1 = current_time.strftime("%Y-%m-%d %H:%M:%S")
+    # driver = start_driver()
+    # agent_name = agent.__class__.__name__
+    # driver.get(agent.target)
+    agent=NewGoibibo()
+    driver.maximize_window()
+    agent_name = agent.__class__.__name__
+    cin, month, year = din.split("/")
+    cout, month, year = dout.split("/")
+    datein = year+"-"+month+"-"+cin
+    dateout = year+"-"+month+"-"+cout
+
+    driver.find_element_by_xpath('//*[@id="root"]/section/div/div[3]/section[1]/div[1]/div/div[3]/div/div[1]').click()
+    driver.find_element_by_xpath(agent.day_in(driver,datein)).click()
+    # time.sleep(5)
+
+    driver.find_element_by_xpath(agent.day_out(driver, dateout)).click()
+
+    driver.find_element_by_id(agent.search_id).send_keys(search_text+Keys.ENTER)
+    time.sleep(1)
+    agent.proceed(driver)
+    listed = agent.listing(driver, hotel_prop)
+    if int(listed)==0:
+        print('a')
+        returndata=sql_entry('Not found',agent_name,din,dout,f'{hotel_prop} not found',time1)
+        driver.quit()
+        return returndata
+    print('b')
+    agent.hotel_find(driver, hotel_prop,int(listed))
+    driver.switch_to.window(driver.window_handles[1])
+    time.sleep(5)
+    data = agent.data_scraping(driver)
     time.sleep(1)
     driver.quit()
     returndata = sql_entry(listed, agent_name, din, dout, data, time1)

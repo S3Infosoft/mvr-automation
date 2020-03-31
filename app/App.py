@@ -9,6 +9,7 @@ from regular import main_run
 from regular import MasterMMT
 from bson.json_util import dumps
 from bson.objectid import ObjectId
+from ui import *
 
 import pymongo
 import datetime
@@ -101,61 +102,44 @@ def process_data():
 
 @app.route('/automation/v1/booking/<cindate>/<coutdate>/<id>', methods=['POST'])
 def automation_for_booking(cindate,coutdate,id):
-    agent = Booking()
-    search_text = "Ratnagiri" # for booking
-    hotel_name = "Mango Valley Resort Ganpatipule"
     yr,month,date=cindate.split('-')
     checkin = date+"/"+month+"/"+yr
     yr, month, date = coutdate.split('-')
     checkout = date + "/" + month + "/" + yr
-    hotel_id = "4216443"
     current_time = datetime.datetime.now()
     end_date = current_time.strftime("%Y-%m-%d")
-    room_typeids = ["room_type_id_421644306", "room_type_id_421644302",
-                    "room_type_id_421644305", "room_type_id_421644303"]
-    room_priceids = ["421644306_174652031_0_42_0",
-                     "421644302_141698786_0_42_0", "421644302_174652031_0_42_0",
-                     "421644305_174652031_0_42_0", "421644303_174652031_0_42_0"]
-    # try:
-    result=main_run(agent, hotel_id, search_text, checkin, checkout,room_typeids=room_typeids, room_priceids=room_priceids)
-    update_entry(id, end_date,result, "Finished", "Succesfully completed")
-    # print(result)
-    return render_template('result.html',param=result)
-    # except Exception as e:
-    #     print(e.__class__.__name__)
-    #     update_entry(id, end_date, "No result", "Error", e.__class__.__name__)
-    #     return f"Error occured of type {e.__class__.__name__}"
+    try:
+        result=booking_run(checkin,checkout)
+        update_entry(id, end_date,result, "Finished", "Succesfully completed")
+        # print(result)
+        return render_template('result.html',param=result)
+    except Exception as e:
+        print(e.__class__.__name__)
+        update_entry(id, end_date, "No result", "Error", e.__class__.__name__)
+        return f"Error occured of type {e.__class__.__name__}"
 
 @app.route('/automation/v1/goibibo/<cindate>/<coutdate>/<id>', methods=['POST'])
 def automation_for_goibibo(cindate,coutdate,id):
-    agent = Goibibo()
-    search_text = "Ganpatipule"
-    hotel_name = "Mango Valley Resort Ganpatipule"
     yr, month, date = cindate.split('-')
     checkin = date + "/" + month + "/" + yr
     yr, month, date = coutdate.split('-')
     checkout = date + "/" + month + "/" + yr
-    room_ids = ["roomrtc_45000750981", "roomrtc_45000574663", "roomrtc_45000717373",
-                           "roomrtc_45000574667"]
     current_time = datetime.datetime.now()
     end_date = current_time.strftime("%Y-%m-%d")
-# try:
-    result=main_run(agent, hotel_name, search_text, checkin, checkout, room_ids=room_ids)
-    update_entry(id,end_date,result, "Finished", "Succesfully completed")
-    return render_template('result.html', param=result)
-    # except Exception as e:
-    #     print(e.__class__.__name__)
-    #     update_entry(id, end_date,"No result", "Error", e.__class__.__name__)
-    #     return f"Error occured of type {e.__class__.__name__}"
+    try:
+        result=goibibo_run(checkin,checkout)
+        update_entry(id,end_date,result, "Finished", "Succesfully completed")
+        return render_template('result.html', param=result)
+    except Exception as e:
+        print(e.__class__.__name__)
+        update_entry(id, end_date,"No result", "Error", e.__class__.__name__)
+        return f"Error occured of type {e.__class__.__name__}"
 
 
 
 
 @app.route('/automation/v1/mmt/<cindate>/<coutdate>/<id>', methods=['POST'])
 def automation_for_mmt(cindate,coutdate,id):
-    agent = MasterMMT()
-    search_text = "Ganpatipule"
-    hotel_name = "Mango Valley Resort Ganpatipule"
     yr, month, date = cindate.split('-')
     checkin = date + "/" + month + "/" + yr[:2]
     yr, month, date = coutdate.split('-')
@@ -167,27 +151,16 @@ def automation_for_mmt(cindate,coutdate,id):
     # checkin="13/03/20"
     # checkout="14/03/20"
     print(type(checkin))
-    hotel_id = "201811281301162654"
-    room_id = ["990001097019", "990001200931", "990001097020", "990001200939", "990001097021", "990001200965",
-               "990001302537"]
-    hotel_id = "201403202029134840"
-    hotel_name = "Nakshatra Beach Resort by O'NEST"
-    room_id = ["990000116124", "990000088134", "990000633744", "990000633727", "990001303500", "990000088158",
-               "990000633761", "990001303499", "990000088270", "990000633777", "990001303498", "990000088272",
-               "990000633793"]
-    hotel_name = "Blue Ocean Resort & Spa"
-    hotel_id = "200908241107085994"
-    room_id = ["990000758441", "990000758470", "990000009534", "990000758436", "990000308366", "990000009536",
-               "990000758437"]
 
-    result = agent.run(search_text, hotel_id, hotel_name, checkin, checkout, room_id)
-    print(result)
-    update_entry(id, end_date,result, "Finished", "Succesfully completed")
-    return render_template('result.html', param=result)
-    # except Exception as e:
-    #     print(e.__class__.__name__)
-    #     update_entry(id, end_date,"No result", "Error", e.__class__.__name__)
-    #     return f"Error occured of type {e.__class__.__name__}"
+    try:
+        result=mmt_run(checkin,checkout)
+        print(result)
+        update_entry(id, end_date,result, "Finished", "Succesfully completed")
+        return render_template('result.html', param=result)
+    except Exception as e:
+        print(e.__class__.__name__)
+        update_entry(id, end_date,"No result", "Error", e.__class__.__name__)
+        return f"Error occured of type {e.__class__.__name__}"
 
 
 

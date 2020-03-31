@@ -26,10 +26,10 @@ class MmtTest(unittest.TestCase):
         room_id = ["990000116124", "990000088134", "990000633744", "990000633727", "990001303500", "990000088158",
                    "990000633761", "990001303499", "990000088270", "990000633777", "990001303498", "990000088272",
                    "990000633793"]
-        # hotel_name = "Blue Ocean Resort & Spa"
-        # hotel_id = "200908241107085994"
-        # room_id = ["990000758441", "990000758470", "990000009534", "990000758436", "990000308366", "990000009536",
-        #            "990000758437"]
+        hotel_name = "Blue Ocean Resort & Spa"
+        hotel_id = "200908241107085994"
+        room_id = ["990000758441", "990000758470", "990000009534", "990000758436", "990000308366", "990000009536",
+                   "990000758437"]
         self.result = self.agent.run(search_text, hotel_id, hotel_name, checkin, checkout, room_id)
         data1 = eval(self.result['rates']['Standard Garden Room'])
         data1[0] = data1[0].replace('INR ', '')

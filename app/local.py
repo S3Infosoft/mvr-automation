@@ -117,43 +117,53 @@ class Goibibo(object):
         waiting = WebDriverWait(driver, 10)
         element = waiting.until(ec.visibility_of_element_located(
             (By.XPATH, "//li[@id = 'react-autosuggest-1-suggestion--0']/div[1]/div[1]/div[1]/span")))
-        element.click()
+        for i in range(10):
+
+            if driver.find_element_by_xpath(f"//li[@id= 'react-autosuggest-1-suggestion--{i}']/div[1]/div[1]/div[1]/span").text=='Ganpatipule':
+                driver.find_element_by_xpath(f"//li[@id= 'react-autosuggest-1-suggestion--{i}']/div[1]/div[1]/div[1]/span").click()
+                print('b')
+                break
         driver.find_element_by_xpath("//*[@id='Home']/div[3]/div[1]/div/div[1]/div[3]/div/div[3]/div/button").click()
 
     @staticmethod
     def listing(driver, hotel_name):
-        i = 0
-        listed = 0
-        for i in range(3):
-            try:
+        try:
+            i = 0
+            listed = 0
+            for i in range(3):
+                try:
 
-                if (hotel_name == driver.find_element_by_xpath(
-                        "//*[@id='srpContainer']/div[2]/div[2]/div/div[2]/div/div[5]/div[1]/div/div/section["
-                        + str(i + 1) + "]/div[2]/div/div[1]/div[1]/div/a/span").text):
-                    listed = i+1
-                    break
-                else:
-                    continue
-            except NoSuchElementException:
-                pass
-        if listed == 0:
-            while 1:
-                divs = driver.find_element_by_tag_name('div').text
-                if hotel_name in divs:
-                    listed = "%01d" % (i / 250)
-                    driver.execute_script("window.scrollTo(" + str(i) + "," + str(i + 750) + ");")
-                    time.sleep(1)
-                    break
-                else:
-                    driver.execute_script("window.scrollTo(" + str(i) + "," + str(i + 250) + ");")
-                    time.sleep(0.5)
-                    i = i + 250
-                    if i > 7500:
+                    if (hotel_name == driver.find_element_by_xpath(
+                            "//*[@id='srpContainer']/div[2]/div[2]/div/div[2]/div/div[5]/div[1]/div/div/section["
+                            + str(i + 1) + "]/div[2]/div/div[1]/div[1]/div/a/span").text):
+                        listed = i+1
                         break
                     else:
                         continue
-        # print(listed)
-        return str(listed)
+                except NoSuchElementException:
+                    pass
+            if listed == 0:
+                while 1:
+                    divs = driver.find_element_by_tag_name('div').text
+                    if hotel_name in divs:
+                        listed = "%01d" % (i / 250)
+                        driver.execute_script("window.scrollTo(" + str(i) + "," + str(i + 750) + ");")
+                        time.sleep(1)
+                        break
+                    else:
+                        driver.execute_script("window.scrollTo(" + str(i) + "," + str(i + 250) + ");")
+                        time.sleep(0.5)
+                        i = i + 250
+                        if i > 7500:
+                            break
+                        else:
+                            continue
+            # print(listed)
+            return str(listed)
+
+        except IndexError as e:
+                print(e,listed,e.args)
+                return str(listed)
 
     @staticmethod
     def hotel_find(driver, hotel_name):
@@ -174,11 +184,12 @@ class Goibibo(object):
             room_price.append([])
             # // *[ @ id = "roomrtc_45000750981"] / div / section / section[2] / aside[2] / div / div[1] / p[1]
             # room_type.append(driver.find_element_by_xpath("//*[@id='"+room_ids[i] + "']/div/section/section[2]/aside[1]/div[1]/div[2]/p[1]").text)
-            room_type.append(driver.find_element_by_xpath("//*[@id='"+room_ids[i] + "']/div/section/section[2]/aside[2]/div/div[1]/p[1]").text)
+            room_type.append(driver.find_element_by_xpath("//*[@id='"+room_ids[i] + "']/div/section/section[2]/aside/div/div/p[1]").text)
+            # // *[ @ id = 'roomrtc_45000234216'] / div / section / section[2] / aside / div / div / p[1]
             try:
                 # // *[ @ id = "roomrtc_45000750981"] / div / section / section[2] / aside[2] / div / div[2] / div[1] / p[2] / span
                 # room_price[i].append(driver.find_element_by_xpath("//*[@id='"+room_ids[i]+"']/div/section/section[2]/aside[1]/div[1]/div[3]/div[1]/p[2]/span").text)
-                room_price[i].append(driver.find_element_by_xpath("//*[@id='"+room_ids[i]+"']/div/section/section[2]/aside[2]/div/div[2]/div[1]/p[2]/span").text)
+                room_price[i].append(driver.find_element_by_xpath("//*[@id='"+room_ids[i] +"']/div/section/section[2]/aside/div/div/div[1]/p[2]/span").text)
             except NoSuchElementException:
                 pass
             try:
@@ -188,6 +199,143 @@ class Goibibo(object):
             except NoSuchElementException:
                 pass
         for i in range(len(room_type)):
+            returnlist.append(room_type[i])
+            returnlist.append(room_price[i])
+        return returnlist
+
+class NewGoibibo(object):
+    target = "https://www.goibibo.com/hotels/"
+    search_id = "downshift-1-input"
+    calender = "input.form-control.inputTxtLarge.widgetCalenderTxt"
+    week_finder = "//*[@id='Home']/div[3]/div[1]/div/div[1]/div[3]/div/div[1]/div[1]/div[2]/div[2]/div[3]/div["
+
+    @staticmethod
+    def day_in(driver, datein):
+        _, _, cin = datein.split("-")
+        cin = str("%01d" % int(cin))
+        for i in range(1,8):
+            if driver.find_element_by_xpath(f'//*[@id="root"]/section/div/div[3]/section[1]/div[1]/div[2]/div[3]/div/div[4]/div/div/div[2]/div[1]/div/ul[2]/li[{i}]/span').text =='':
+                continue
+            else:
+                break
+        cin=int(cin)+i-1
+
+        return f'//*[@id="root"]/section/div/div[3]/section[1]/div[1]/div[2]/div[3]/div/div[4]/div/div/div[2]/div[1]/div/ul[2]/li[{cin}]/span'
+
+    @staticmethod
+    def day_out(driver, dateout):
+        _, _, cout = dateout.split("-")
+        cout = str("%01d" % int(cout))
+        for i in range(1, 8):
+            if driver.find_element_by_xpath(
+                    f'//*[@id="root"]/section/div/div[3]/section[1]/div[1]/div[2]/div[3]/div/div[4]/div/div/div[2]/div[1]/div/ul[2]/li[{i}]/span').text == '':
+                continue
+            else:
+                break
+        cout = int(cout) + i - 1
+
+        return f'//*[@id="root"]/section/div/div[3]/section[1]/div[1]/div[2]/div[3]/div/div[4]/div/div/div[2]/div[1]/div/ul[2]/li[{cout}]/span'
+
+
+
+
+
+    @staticmethod
+    def proceed(driver):
+        waiting = WebDriverWait(driver, 10)
+        element = waiting.until(ec.visibility_of_element_located(
+        (By.XPATH, '//*[@id="downshift-1-item-0"]/span')))
+        for i in range(10):
+            # waiting = WebDriverWait(driver, 10)
+            # element = waiting.until(ec.visibility_of_element_located(
+            # (By.XPATH, f'//*[@id="downshift-1-item-{i}"]/span')))
+            print(i)
+            if driver.find_element_by_xpath(f'//*[@id="downshift-1-item-{i}"]/span').text == 'Ganpatipule':
+                driver.find_element_by_xpath(f'//*[@id="downshift-1-item-{i}"]/span').click()
+                break
+        driver.find_element_by_xpath('//*[@id="root"]/section/div/div[3]/section[1]/div[1]/div/button').click()
+
+    @staticmethod
+    def listing(driver, hotel_name):
+        try:
+            i = 0
+            listed = 0
+            for i in range(3):
+
+                try:
+                    waiting = WebDriverWait(driver, 10)
+                    element = waiting.until(ec.visibility_of_element_located(
+                        (By.XPATH, '//*[@id="root"]/span/div/section[2]/div/div/div[' + str(
+                        i + 2) + ']/div/div[3]/div[1]/div[1]/div[2]/span')))
+
+                    if (hotel_name == driver.find_element_by_xpath(
+                            '//*[@id="root"]/span/div/section[2]/div/div/div['+str(i+2)+']/div/div[3]/div[1]/div[1]/div[2]/span').text):
+
+                        listed = i+1
+                        break
+                    else:
+                        continue
+                except NoSuchElementException as e:
+                    print("error e3 : ",e.args )
+            if listed == 0:
+                while 1:
+                    divs = driver.find_element_by_tag_name('div').text
+                    if hotel_name in divs:
+                        listed = "%01d" % (i / 250)
+                        driver.execute_script("window.scrollTo(" + str(i) + "," + str(i + 750) + ");")
+                        time.sleep(1)
+                        break
+                    else:
+                        driver.execute_script("window.scrollTo(" + str(i) + "," + str(i + 250) + ");")
+                        time.sleep(0.5)
+                        i = i + 250
+                        if i > 7500:
+                            break
+                        else:
+                            continue
+            print(listed)
+
+            return str(listed)
+
+        except IndexError:
+                return str(listed)
+
+    @staticmethod
+    def hotel_find(driver, hotel_name,listed):
+        l = driver.find_elements_by_class_name('HotelCardstyles__HotelNameTextSpan-sc-1s80tyk-14')
+        print(l)
+        for i in range(int(listed) + 1):
+            if l[i].text == hotel_name:
+                l[i].click()
+                print('b')
+                time.sleep(2)
+                break
+
+
+
+    @staticmethod
+    def data_scraping(driver):
+        room_ids = None
+        # print('a')
+        room_type = []
+        room_price = []
+        room_type_refrences = driver.find_elements_by_xpath('//*[@class="RoomFlavors__RoomFlavorsContainer-ikuviz-0 ihqqYP room-flavor-container"]')
+        print(room_type_refrences,type(room_type_refrences))
+        # room_price_refrences=driver.find_elements_by_class_name('')
+        count=len(room_type_refrences)
+        for i in range(count):
+            r_type=driver.find_element_by_xpath(f'// *[ @ id = "rooms"] / div[{i+2}] / div / div[1]/ div/ p').text
+            # print(r_type)
+            r_price=driver.find_element_by_xpath(f'//*[ @ id = "rooms"]/div[{i+2}]//*[@class="RoomFlavor__ActualPriceTextStyled-guj4pt-13 cDymtq"]').text
+            # print(r_price,r_type)
+            room_type.append(r_type)
+            room_price.append(r_price)
+
+
+
+        returnlist = []
+
+        for i in range(len(room_type_refrences)):
             returnlist.append(room_type[i])
             returnlist.append(room_price[i])
         return returnlist
@@ -207,14 +355,20 @@ class Mmt(object):
             (By.XPATH, '//*[@id="root"]/div/div[3]/div[2]')))
         driver.find_element_by_xpath('//*[@id="root"]/div/div[3]/div[2]').click()
         driver.find_element_by_xpath("//*[@id='hsw_search_button']").click()
-        while True:
+        # wait = WebDriverWait(driver, 10)
+        # wait.until(ec.visibility_of_element_located(
+        #     (By.XPATH, '//*[@id="htl_id_seo_'+hotel_id+'"]')))
+        # a = driver.find_element_by_xpath('//*[@id="htl_id_seo_' + hotel_id + '"]')
+        n=0
+        while n<40:
             driver.execute_script("window.scrollTo(0,document.body.scrollHeight)")
             try:
                 a = driver.find_element_by_xpath('//*[@id="htl_id_seo_'+hotel_id+'"]')
                 break
             except:
+                n+=1
                 continue
-        print(f"a={a} and a text = {a.text}")
+        # print(f"a={a} and a text = {a.text}")
 
         i = 0
         time.sleep(2)
@@ -226,10 +380,14 @@ class Mmt(object):
                 b = driver.find_element_by_xpath(
                     "//*[@id='Listing_hotel_" + str(i) + "']/a/div/div[1]/div[2]/div[1]/div[1]/p/span")
             print(f"b={b} and b text = {b.text}")
-            if a == b:
-                return str(i + 1)
-            else:
-                i = i + 1
+            try:
+                if a == b:
+                    return str(i + 1)
+                else:
+                    i = i + 1
+            except Exception as e:
+                if str(e) == "local variable 'a' referenced before assignment":
+                     return 0
 
     @staticmethod
     def hotel_find(driver, hotel_id, hotel_name, din, dout):
