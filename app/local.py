@@ -403,9 +403,12 @@ class Mmt(object):
     def data_scraping(driver, room_id):
         room_type = []
         room_price = []
+        print('a')
         m = 0
+        time.sleep(5)
         for i in range(4):
             try:
+
                 room_price.append([])
                 room_type.append(driver.find_element_by_xpath("//*[@id='RoomType']/div/div[2]/div["
                                                               + str(i+2)+"]/div[1]/div/h2").text)
@@ -428,8 +431,8 @@ class Mmt(object):
                     m = m+1
                     if m >= len(room_id):
                         break
-            except NoSuchElementException:
-                print(i)
+            except NoSuchElementException as e:
+                print(i,e.args)
                 pass
         returnlist = []
         for i in range(len(room_type)):

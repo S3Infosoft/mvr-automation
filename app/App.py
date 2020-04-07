@@ -141,9 +141,9 @@ def automation_for_goibibo(cindate,coutdate,id):
 @app.route('/automation/v1/mmt/<cindate>/<coutdate>/<id>', methods=['POST'])
 def automation_for_mmt(cindate,coutdate,id):
     yr, month, date = cindate.split('-')
-    checkin = date + "/" + month + "/" + yr[:2]
+    checkin = date + "/" + month + "/" + yr
     yr, month, date = coutdate.split('-')
-    checkout = date + "/" + month + "/" + yr[:2]
+    checkout = date + "/" + month + "/" + yr
     current_time = datetime.datetime.now()
     end_date = current_time.strftime("%Y-%m-%d")
     print(checkin)

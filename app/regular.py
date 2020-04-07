@@ -68,6 +68,7 @@ class MasterMMT(object):
         driver = start_driver()
         agent.hotel_find(driver, hotel_id, hotel_name, din, dout)
         data = agent.data_scraping(driver, room_id)
+        print(data)
         driver.quit()
         returndata = sql_entry(listed, agent_name, din, dout, data, time1)
         return returndata
