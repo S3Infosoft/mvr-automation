@@ -45,7 +45,7 @@ def start_driver():
     return driver
 
 
-def sql_entry(listed, agent_name, din, dout, data, time1):
+def sql_entry(listed, agent_name, din, dout, data, time1,hotel_name):
     # sql = Database()
     # sql.create_table()
     # sql.insert_table(time1, agent_name, din, dout, listed,
@@ -67,10 +67,11 @@ def sql_entry(listed, agent_name, din, dout, data, time1):
         i = i+2
     returndata['rates'] = rates
     returndata['Status'] = 'OK'
+    returndata['hotelname']=hotel_name
     return returndata
 
 
-def main_run(agent, hotel_prop, search_text, din, dout, **kwargs):
+def main_run(agent, hotel_prop, search_text, din, dout,hotel_name, **kwargs):
     current_time = datetime.datetime.now()
     time1 = current_time.strftime("%Y-%m-%d %H:%M:%S")
     driver = start_driver()
@@ -93,7 +94,7 @@ def main_run(agent, hotel_prop, search_text, din, dout, **kwargs):
     data = agent.data_scraping(driver, **kwargs)
     time.sleep(1)
     driver.quit()
-    returndata = sql_entry(listed, agent_name, din, dout, data, time1)
+    returndata = sql_entry(listed, agent_name, din, dout, data, time1,hotel_name)
     return returndata
 
 

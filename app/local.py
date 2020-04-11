@@ -420,6 +420,9 @@ class Mmt(object):
                         k = k+1
                 except NoSuchElementException:
                     count = k - 1
+                except Exception as e:
+                    print(e,e.args)
+
                 for j in range(count):
                     wait = WebDriverWait(driver, 10)
                     wait.until(ec.visibility_of_element_located(
@@ -434,6 +437,8 @@ class Mmt(object):
             except NoSuchElementException as e:
                 print(i,e.args)
                 pass
+            except Exception as e:
+                print(e,e.args)
         returnlist = []
         for i in range(len(room_type)):
             returnlist.append(room_type[i])

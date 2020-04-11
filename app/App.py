@@ -78,6 +78,23 @@ def update_entry(id,end_date,response,status,comment):
     # result = eval(dumps(result))
     # print(result[0])
 
+def retrive_data():
+    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+    mydb = myclient["mvr_results"]
+    data=mydb.Completed_test
+
+    outputs=data.find()
+    for item in outputs:
+        print(item)
+
+def delete_data():
+    myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+    mydb = myclient["mvr_results"]
+    mycol = mydb["Completed_test"]
+    mycol.delete_many({})
+    print('deleted all document successfully')
+
+
 
 @app.route("/")
 def hello():
@@ -92,6 +109,7 @@ def process_data():
     start_date = current_time.strftime("%Y-%m-%d")
     if agent=='booking':
         id=data_entry("Booking.com","",start_date,"","Started","Succesfully started")
+        retrive_data()
         return redirect("/automation/v1/booking/"+cindate+"/"+coutdate+"/"+id,code=307)
     elif agent=='goibibo':
         id=data_entry("Goibibo.com","",start_date,"","Started","Succesfully started")
@@ -148,8 +166,8 @@ def automation_for_mmt(cindate,coutdate,id):
     end_date = current_time.strftime("%Y-%m-%d")
     print(checkin)
     print(type(checkin))
-    # checkin="13/03/20"
-    # checkout="14/03/20"
+    # checkin="13/03/2020"
+    # checkout="14/03/2020"
     print(type(checkin))
 
     try:
