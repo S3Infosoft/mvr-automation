@@ -11,10 +11,11 @@ class BookingTest(unittest.TestCase):
 
     def setUp(self):
         self.agent = Booking()
+
         search_text = "Ratnagiri"
         hotel_name = "Mango Valley Resort Ganpatipule"
-        checkin = "30/03/2020"
-        checkout = "31/03/2020"
+        checkin = "30/05/2020"
+        checkout = "31/05/2020"
         hotel_id = "4216443"
         current_time = datetime.datetime.now()
         end_date = current_time.strftime("%Y-%m-%d")
@@ -23,7 +24,7 @@ class BookingTest(unittest.TestCase):
         room_priceids = ["421644306_174652031_0_42_0",
                          "421644302_141698786_0_42_0", "421644302_174652031_0_42_0",
                          "421644305_174652031_0_42_0", "421644303_174652031_0_42_0"]
-        self.result = main_run(self.agent, hotel_id, search_text, checkin, checkout, room_typeids=room_typeids,
+        self.result = main_run(self.agent, hotel_id, search_text, checkin, checkout,hotel_name, room_typeids=room_typeids,
                           room_priceids=room_priceids)
         data1 = eval(self.result['rates']['Superior Suite with Sea View'])
         data1[0]=data1[0].replace('₹ ','')

@@ -35,6 +35,8 @@ class Booking(object):
         for i in range(40):
                 wait = WebDriverWait(driver, 10)
                 wait.until(ec.visibility_of_element_located((By.XPATH, "//*[@id='hotellist_inner']/div[@data-hotelid='"+hotel_id+"']")))
+                print(driver.find_element_by_xpath("//*[@id='hotellist_inner']/div[@data-hotelid='"+hotel_id+"']"))
+                print(driver.find_element_by_xpath("//*[@id='hotellist_inner']/div[" + str(i + 1) + "]"))
                 if ((driver.find_element_by_xpath("//*[@id='hotellist_inner']/div[@data-hotelid='"+hotel_id+"']")) == (
                      driver.find_element_by_xpath("//*[@id='hotellist_inner']/div[" + str(i + 1) + "]"))):
                     listed = str("%01d" % ((i + 1) / 2))
@@ -49,6 +51,7 @@ class Booking(object):
 
     @staticmethod
     def data_scraping(driver, **kwargs):
+
         room_priceids = None
         room_typeids = None
         for key, value in kwargs.items():

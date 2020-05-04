@@ -2,12 +2,19 @@ from regular import main_run
 from regular import MasterMMT
 from regular import main_run_for_new_goibibo
 from local import*
+from joblib import Parallel, delayed
 
 
 def main():
     booking_run()
     # goibibo_run()
     # mmt_run()
+    chkin=["26/05/2020","27/05/2020"]
+    chkot=["27/05/2020","28/05/2020"]
+
+    # Parallel(n_jobs=2)(delayed(booking_run)(i, j) for i in chkin for j in chkot)
+
+
 
 def goibibo_run( checkin = "29/04/2020",checkout = "30/04/2020"):
     agent = Goibibo()

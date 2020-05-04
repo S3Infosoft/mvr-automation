@@ -171,18 +171,25 @@ def start_driver():
     options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
+    options.add_argument("enable-automation");
+    options.add_argument("--disable-extensions");
+    options.add_argument("--dns-prefetch-disable");
+    options.add_argument("--disable-gpu");
+
+    nodeurl = 'http://192.168.99.100:4445/wd/hub'
     driver = webdriver.Chrome(chrome_options=options, executable_path=r'chromedriver.exe')
-    url = driver.command_executor._url
-    driver.set_page_load_timeout(30)
+    # url = driver.command_executor._url
+    caps = DesiredCapabilities.CHROME.copy()
+    # caps['max_duration'] = 100
+
+    print(caps)
+    # driver = webdriver.Remote(
+    #     command_executor=nodeurl,
+    #     # desired_capabilities=DesiredCapabilities.CHROME)
+    #     desired_capabilities=caps)
+    driver.set_page_load_timeout(500)
     driver.implicitly_wait(10)
     driver.maximize_window()
-    caps = DesiredCapabilities.CHROME.copy()
-    caps['max_duration']=10
-    print(caps)
-    driver = webdriver.Remote(
-        command_executor=url,
-        # desired_capabilities=DesiredCapabilities.CHROME)
-        desired_capabilities=caps)
 
 
     return driver
@@ -259,7 +266,11 @@ def main_run(agent, hotel_prop, search_text, din, dout,hotel_name, **kwargs):
     # print('b')
     agent.hotel_find(driver, hotel_prop)
     driver.switch_to.window(driver.window_handles[1])
+
+    print('ab')
     time.sleep(5)
+    # driver.find_element_by_tag_name("body").send_keys("Keys.ESCAPE");
+    webdriver.ActionChains(driver).send_keys(Keys.ESCAPE).perform()
     data = agent.data_scraping(driver, **kwargs)
     time.sleep(1)
     driver.quit()
