@@ -3,10 +3,10 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
-from local import *
+from .local1 import *
 import requests
 # from Common import main_run
-from ddl_sql import Database
+# from ddl_sql import Database
 import datetime
 
 S = "room_type_id_421644301"
@@ -163,7 +163,7 @@ class MasterMMT(object):
         return returndata
 
 
-def start_driver():
+def start_driver(clint):
     global driver
     options = Options()
     options.add_argument("--headless")
@@ -176,7 +176,8 @@ def start_driver():
     options.add_argument("--dns-prefetch-disable");
     options.add_argument("--disable-gpu");
 
-    nodeurl = 'http://192.168.99.100:4444/wd/hub'
+    # nodeurl = 'http://192.168.99.100:4445/wd/hub'
+    nodeurl = clint
     # driver = webdriver.Chrome(chrome_options=options, executable_path=r'chromedriver.exe')
     # url = driver.command_executor._url
     caps = DesiredCapabilities.CHROME.copy()
@@ -230,10 +231,10 @@ def sql_entry(listed, agent_name, din, dout, data, time1,hotel_name):
     return returndata
 
 
-def main_run(agent, hotel_prop, search_text, din, dout,hotel_name, **kwargs):
+def main_run(agent, hotel_prop, search_text, din, dout,hotel_name,clint, **kwargs):
     current_time = datetime.datetime.now()
     time1 = current_time.strftime("%Y-%m-%d %H:%M:%S")
-    driver = start_driver()
+    driver = start_driver(clint)
     driver.maximize_window()
     agent_name = agent.__class__.__name__
     driver.get(agent.target)

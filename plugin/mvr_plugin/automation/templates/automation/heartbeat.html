@@ -1,0 +1,15 @@
+{% extends 'automation/base.html' %}
+{% block title %}Heartbeat - mvr automation
+{% endblock %}
+{% block body %}
+<div class="container">
+    <form method="get" action="automation/sgheartbeat">
+        <button class="btn btn-danger">Check heartbeat for Selenium Grid</button>
+    </form>
+    <br><br>
+      <form method="get" action="automation/zheartbeat">
+        <button class="btn btn-danger">Check heartbeat for Zalenium</button>
+    </form>
+</div>
+{% endblock %}
+

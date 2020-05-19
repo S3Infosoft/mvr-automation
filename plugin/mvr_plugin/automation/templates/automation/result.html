@@ -1,0 +1,63 @@
+{% extends 'automation/base.html' %}
+{% block title %}RESULT: MVR automation{% endblock %}
+{% block body %}
+
+<div class="container" align="left">
+    <center><br><br>
+        <div class="alert alert-primary" role="alert">
+  Automation Result
+</div><br><br>
+        {% if res1.status != 'Error' %}
+        <label>Start time: </label>&nbsp;&nbsp;&nbsp;&nbsp;{{ param.start_time }}<br><br>
+        <label>End time: </label>&nbsp;&nbsp;&nbsp;&nbsp;{{ param.end_time }}<br><br>
+        <label>OTA: </label>&nbsp;&nbsp;&nbsp;&nbsp;{{param.ota}}<br><br>
+        <label>Check in date: </label>&nbsp;&nbsp;&nbsp;&nbsp;{{param.check_in}}<br><br>
+        <label>Check out date: </label>&nbsp;&nbsp;&nbsp;&nbsp;{{param.check_out}}<br><br>
+        <label>Position of hotel in website </label>&nbsp;&nbsp;&nbsp;&nbsp;{{param.listed_position}}<br><br>
+        {% if param.Status == 'OK' %}
+        <label> <b>Rates is as follows</b> </label><br><br>
+        <table class="table">
+            <thead class="thead thead-dark">
+                <tr>
+                    <th scope="col">ROOM TYPE</th>
+                    <th scope="col">PRICE</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+                {% for room,price in param.rates.items %}
+                <tr>
+                    <td>{{room}}</td>
+                    <td>
+
+                            {{ price }} <br>
+
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+        {% if param.Status == 'NOT OK' %}
+              <label> <b>{{ param.rates }}</b> </label><br><br>
+        {% endif %}
+    {% endif %}
+
+    {% if res1.status == 'Error' %}
+
+      <label>Start time: </label>&nbsp;&nbsp;&nbsp;&nbsp;{{ res1.start_date }}<br><br>
+        <label>End time: </label>&nbsp;&nbsp;&nbsp;&nbsp;{{ res1.end_date }}<br><br>
+        <label>OTA: </label>&nbsp;&nbsp;&nbsp;&nbsp;{{res1.ota}}<br><br>
+        <label>Check in date: </label>&nbsp;&nbsp;&nbsp;&nbsp;{{res1.cindate}}<br><br>
+        <label>Check out date: </label>&nbsp;&nbsp;&nbsp;&nbsp;{{res1.coutdate}}<br><br>
+        <label>Type of Error </label>&nbsp;&nbsp;&nbsp;&nbsp;{{res1.comments}}<br><br>
+
+
+
+
+    {% endif %}
+    </center>
+</div>
+
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends 'automation/base.html' %}
+{% block title %}MVR automation{% endblock %}
+{% block body %}
+
+<div class="container">
+    <center><br><br>
+        <div class="alert alert-success" role="alert">
+  Automation details
+</div><br><br>
+        <form method="get" action="">
+            <label>Enter the Checkin data</label>&nbsp;&nbsp;&nbsp;&nbsp;<input type="date" id="cdt" name="cindt"><br><br>
+            <label>Enter the Checkout data</label>&nbsp;&nbsp;&nbsp;<input type="date" id="codt" name="coutdt"><br><br>
+            <label>Select the agent</label>&nbsp;&nbsp;&nbsp;&nbsp; <select id="agnt" name="agt">
+            <option value="booking">Booking.com</option>
+            <option value="goibibo">Goibibo.com</option>
+            <option value="mmt">Make My Trip</option>
+        </select><br><br>
+            <button class="btn btn-danger" id="runn" type="submit">Run </button>
+
+        </form>
+
+        <div id="process" >
+            {% for test in tests %}
+            <br>
+            <div id="{{test.ids}}" style="border:2px solid red; border-radius:10px;">
+                <br>
+                <div style="background-color:yellow; color:black;  border-radius:10px; width:50%;" >start date={{test.start_date}}</div>
+
+                {% if test.end_date != "" %}
+                <br>
+                <div style="background-color:yellow; color:black;  border-radius:10px; width:50%;" >
+                    end date={{test.end_date}}
+                </div>
+
+                {% endif %}
+                 <br>
+                <div style="background-color:yellow; color:black;  border-radius:10px; width:50%;" >Agent={{test.ota}}</div>
+                <br>
+
+                <div style="background-color:yellow; color:black;  border-radius:10px; width:50%;" >checkin date={{test.checkin}}</div>
+                <br>
+
+                <div style="background-color:yellow; color:black;  border-radius:10px; width:50%;" >checkout date={{test.checkout}}</div>
+                <br>
+
+
+                {% if test.status == 'Started' %}
+                   <div style="background-color:green; color:white;  border-radius:10px; width:50%;" >status={{test.status}}</div>
+                {% endif %}
+
+                {% if test.status != 'Started' %}
+                   <div style="background-color:Red; color:white;  border-radius:10px; width:50%;" >status={{test.status}}</div>
+                {% endif %}
+                <br>
+                {% if test.comments != "Succesfully started" %}
+                <form method="get" action="/automation/result">
+                    <input type="hidden" name="id" value="{{test.ids}}">
+                <button class="btn btn-primary" type="submit">View result</button>
+                    </form>
+                <br>
+                {% endif %}
+
+</div>
+            {% endfor %}
+        </div>
+    </center>
+</div>
+
+{% endblock %}
+{% block js %}
+<script>
+    $('#runn').on('click',function(){
+    var checkin=$('#cdt').val();
+    var checkout=$('#codt').val();
+    var agt=$('#agnt').val();
+    var dt=checkin + '@' +checkout + '@'+agt
+    console.log(dt)
+
+      $.ajax({
+                type:'POST',
+                url:'/automation/ajax/automate/',
+               data:{
+                    'dt' : dt,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'
+                },
+                dataType: 'json',
+                success: function(data){
+                console.log(data.id)
+
+                    }
+                });
+    })
+</script>
+{% endblock %}
